@@ -1,50 +1,68 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, PermissionsAndroid} from 'react-native';
+import {View, Text, Image, StyleSheet, PermissionsAndroid, Platform} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
+import {request, PERMISSIONS} from 'react-native-permissions';
+
 
 const DashboardScreen = () => {
-  const [isGranted, setIsGranted] = React.useState(null);
+  const [isGranted, setIsGranted] = React.useState(false);
   const [location, setLocation] = React.useState(null);
 
   React.useEffect(() => {
-    requestCameraPermission();
+    requestLocationPermission();
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log('position', position)
+        setLocation(position.coords);
+      },
+      error => {
+        console.log('error', error);
+      },
+    );
   }, []);
 
   React.useEffect(() => {
     Geolocation.getCurrentPosition(
       position => {
+        console.log('position', position)
         setLocation(position.coords);
       },
       error => {
-        console.log(error);
+        console.log('error', error);
       },
     );
   }, [isGranted]);
 
-  const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Bring The Gym Map Permission',
+  const requestLocationPermission = async () => {
+    if(Platform.OS !== 'ios') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Bring The Gym Map Permission',
           message: 'Bring The Gym need access to your geolocation ',
           buttonNeutral: 'Ask Me Later',
           buttonNegative: 'Cancel',
           buttonPositive: 'OK',
         },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        setIsGranted(true);
-      } else {
-        console.log('Camera permission denied');
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          setIsGranted(true);
+        } else {
+          console.log('Location permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
       }
-    } catch (err) {
-      console.warn(err);
-    }
+    } else {
+      request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then((result) => {
+        if(result === 'granted') {
+          setIsGranted(true)
+        }
+      });
+    };
   };
-
-  console.log(location);
 
   return (
     <View style={styles.container}>
@@ -75,7 +93,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: 'black',
-    height: 550,
+    height: '85%',
     width: '80%',
     position: 'absolute',
     right: -6,
@@ -89,7 +107,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   map: {
-    height: 546,
+    height: '100%',
     width: '100%',
   },
 });

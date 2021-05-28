@@ -4,6 +4,8 @@
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App need permission to Photo Library</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+  	<string>App need permission to your location</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
