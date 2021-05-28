@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "74892996588",
+    "firebase_url": "https://bringthegym-6185a-default-rtdb.firebaseio.com",
+    "project_id": "bringthegym-6185a",
+    "storage_bucket": "bringthegym-6185a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:74892996588:android:348446c74451a44d2a1ac9",
+        "android_client_info": {
+          "package_name": "com.bringthegym"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "74892996588-fjad3bjk6q2dp97k0032bm8fm1dqchpr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB70rkq2jDmRNZw1ZHy_jEtNZjAA7hIAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "74892996588-fjad3bjk6q2dp97k0032bm8fm1dqchpr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "74892996588-3nav280jh0ddsma78lo5g4h7brqlq7vl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.Bringthegym"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
