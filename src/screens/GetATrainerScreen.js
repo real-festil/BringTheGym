@@ -125,8 +125,7 @@ const GetATrainerScreen = () => {
                             uri: trainer.userPhoto,
                           }
                         : {
-                            uri:
-                              'https://lh3.googleusercontent.com/proxy/dtmbqN60D9kBaUOLu3hORUV9RL_wI1CwI3upeVoh6c8yRnU8JoI3YnysJAiv25W_IyX4IG92jb3r1TTdG_qzvZOa',
+                            uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
                           }
                     }>
                     <View style={styles.textContainer}>
@@ -202,8 +201,8 @@ const styles = StyleSheet.create({
   userText: {
     textAlign: 'center',
     fontSize: 14,
-    fontWeight: 'bold',
     marginVertical: 10,
+    fontFamily: 'CircularStd-Bold',
   },
   userImage: {
     width: '100%',

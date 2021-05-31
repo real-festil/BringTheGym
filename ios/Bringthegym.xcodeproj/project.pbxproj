@@ -19,6 +19,9 @@
 		B5559A842639AD9500516982 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5559A832639AD9500516982 /* GoogleService-Info.plist */; };
 		B5F4D06F263C2FE5006E057D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F4D06E263C2FE5006E057D /* File.swift */; };
 		C6CAF77612106F5F3708FB59 /* libPods-Bringthegym.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FD9D0E9265DADCAD38E4A5 /* libPods-Bringthegym.a */; };
+		420858112EA742419140333A /* CircularStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */; };
+		065F5A3B2DC94AA0AAFF2789 /* CircularStd-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */; };
+		87FA9C33EA4F48E8BEE7FE27 /* CircularStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +58,9 @@
 		C44118C2C6C7420A9B76B739 /* Antonio-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Antonio-Light.ttf"; path = "../src/assets/fonts/Antonio-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F6538E58DF16B0418C3436DA /* libPods-Bringthegym-BringthegymTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bringthegym-BringthegymTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */ = {isa = PBXFileReference; name = "CircularStd-Book.otf"; path = "../src/assets/fonts/CircularStd-Book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */ = {isa = PBXFileReference; name = "CircularStd-Book.ttf"; path = "../src/assets/fonts/CircularStd-Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */ = {isa = PBXFileReference; name = "CircularStd-Bold.ttf"; path = "../src/assets/fonts/CircularStd-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +122,9 @@
 				83CF8300925D4B9095BDF8B9 /* Antonio-Bold.ttf */,
 				C44118C2C6C7420A9B76B739 /* Antonio-Light.ttf */,
 				8ED66A4806C941A5887B0C13 /* Antonio-Regular.ttf */,
+				6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */,
+				C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */,
+				916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -275,6 +284,9 @@
 				2ED3217D4DCF400F9537B60C /* Antonio-Bold.ttf in Resources */,
 				4AA38357E30540E98F4E11D2 /* Antonio-Light.ttf in Resources */,
 				259701ECAA464E4C86AD7BFB /* Antonio-Regular.ttf in Resources */,
+				420858112EA742419140333A /* CircularStd-Book.otf in Resources */,
+				065F5A3B2DC94AA0AAFF2789 /* CircularStd-Book.ttf in Resources */,
+				87FA9C33EA4F48E8BEE7FE27 /* CircularStd-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

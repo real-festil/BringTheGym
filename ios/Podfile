@@ -28,8 +28,6 @@ target 'Bringthegym' do
 
   pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
 
-  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
-
   target 'BringthegymTests' do
     inherit! :complete
     # Pods for testing

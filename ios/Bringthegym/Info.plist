@@ -5,7 +5,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App need permission to Photo Library</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-  	<string>App need permission to your location</string>
+	<string/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -49,8 +49,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -92,6 +90,9 @@
 		<string>Antonio-Bold.ttf</string>
 		<string>Antonio-Light.ttf</string>
 		<string>Antonio-Regular.ttf</string>
+		<string>CircularStd-Book.otf</string>
+		<string>CircularStd-Book.ttf</string>
+		<string>CircularStd-Bold.ttf</string>
 	</array>
 </dict>
 </plist>

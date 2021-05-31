@@ -25,6 +25,7 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import AddressScreen from './src/screens/AddressScreen';
 import GetATrainerScreen from './src/screens/GetATrainerScreen';
 import ClienteleScreen from './src/screens/ClienteleScreen';
+import EquipmentScreen from './src/screens/EquipmentScreen';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -42,7 +43,6 @@ const NavigationDrawerStructure = props => {
   React.useEffect(() => {
     //this.signOut()
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    console.log(userData);
     return subscriber; // unsubscribe on unmount
   }, []);
 
@@ -101,18 +101,29 @@ const NavigationDrawerStructure = props => {
                   : require('./src/assets/profile_photo.png')
               }
               style={{
-                width: 35,
-                height: 35,
+                width: 45,
+                height: 45,
                 marginRight: 15,
                 borderRadius: 50,
               }}
             />
           </View>
           <View>
-            <Text style={{fontWeight: 'bold'}}>
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: 'CircularStd-Bold',
+              }}>
               {userData._user.displayName}
             </Text>
-            <Text style={{color: '#4E4E4E', textTransform: 'capitalize'}}>
+            <Text
+              style={{
+                color: '#4E4E4E',
+                textTransform: 'capitalize',
+                fontSize: 16,
+                // fontFamily: 'Antonio-Regular',
+                fontFamily: 'CircularStd-Book',
+              }}>
               {role}
             </Text>
           </View>
@@ -123,8 +134,7 @@ const NavigationDrawerStructure = props => {
         {/*Donute Button Image */}
         <Image
           source={{
-            uri:
-              'https://cdn1.iconfinder.com/data/icons/mixed-17/16/icon_Hamburger_rounded-512.png',
+            uri: 'https://cdn1.iconfinder.com/data/icons/mixed-17/16/icon_Hamburger_rounded-512.png',
           }}
           style={{width: 25, height: 25, marginLeft: 12, marginTop: 20}}
         />
@@ -139,7 +149,7 @@ const screenOptions = navigation => ({
   headerRight: () => (
     <Image
       source={require('./src/assets/logo.jpeg')}
-      style={{width: 100, height: 100, marginRight: -10, marginTop: -40}}
+      style={{width: 130, height: 130, marginRight: -10, marginTop: -40}}
     />
   ),
   headerTitle: <></>,
@@ -185,6 +195,16 @@ function ClienteleStack({initialRouteName, navigation}) {
       initialRouteName={initialRouteName}
       screenOptions={screenOptions}>
       <Drawer.Screen name="ClienteleScreen" component={ClienteleScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function EquipmentStack({initialRouteName, navigation}) {
+  return (
+    <Stack.Navigator
+      initialRouteName={initialRouteName}
+      screenOptions={screenOptions}>
+      <Drawer.Screen name="EquipmentScreen" component={EquipmentScreen} />
     </Stack.Navigator>
   );
 }
@@ -243,7 +263,11 @@ export default function App() {
             drawerContentOptions={{
               activeTintColor: 'black',
               backgroundColor: '#9abdc1',
-              itemStyle: {marginVertical: 5, color: 'black'},
+              itemStyle: {
+                marginVertical: 5,
+                color: 'black',
+                fontFamily: 'CircularStd-Book',
+              },
             }}
             routeNames={['Dashboard', 'Profile']}
             drawerContent={CustomDrawerContent}>
@@ -265,6 +289,7 @@ export default function App() {
                 component={ClienteleStack}
               />
             )}
+            <Drawer.Screen name="Equipment" component={EquipmentStack} />
             <Drawer.Screen
               name="Profile"
               options={{drawerLabel: 'Profile'}}
@@ -284,7 +309,6 @@ export default function App() {
               name="CustomerRegister"
               component={CustomerRegister}
             />
-
             <Stack.Screen name="TrainerRegister" component={SellerRegister} />
             <Stack.Screen name="AddressScreen" component={AddressScreen} />
           </Stack.Navigator>

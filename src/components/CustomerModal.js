@@ -4,6 +4,7 @@ import {
   Animated,
   Text,
   Image,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -49,44 +50,46 @@ const CustomerModal = ({user, onClose}) => {
       <Animated.View
         useNativeD
         style={[styles.modal, {transform: [{translateY}]}]}>
-        <Text style={styles.title}>Customer</Text>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.userImage}
-            source={
-              userPhoto !== 'none'
-                ? {
-                    uri: userPhoto,
-                  }
-                : require('../assets/profile_photo.png')
-            }
-          />
-          <Text style={styles.fullName}>{fullName}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Bio</Text>
-          <Text style={styles.info}>{bio}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Email</Text>
-          <Text style={styles.info}>{email}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Weight</Text>
-          <Text style={styles.info}>{weight}kg</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Height</Text>
-          <Text style={styles.info}>{height}cm</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>How often customer train</Text>
-          <Text style={styles.info}>{train}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Goals</Text>
-          <Text style={styles.info}>{goals}</Text>
-        </View>
+        <ScrollView>
+          <Text style={styles.title}>Customer</Text>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.userImage}
+              source={
+                userPhoto !== 'none'
+                  ? {
+                      uri: userPhoto,
+                    }
+                  : require('../assets/profile_photo.png')
+              }
+            />
+            <Text style={styles.fullName}>{fullName}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Bio</Text>
+            <Text style={styles.info}>{bio}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Email</Text>
+            <Text style={styles.info}>{email}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Weight</Text>
+            <Text style={styles.info}>{weight}kg</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Height</Text>
+            <Text style={styles.info}>{height}cm</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>How often customer train</Text>
+            <Text style={styles.info}>{train}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Goals</Text>
+            <Text style={styles.info}>{goals}</Text>
+          </View>
+        </ScrollView>
       </Animated.View>
     </View>
   );
@@ -113,20 +116,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+    maxHeight: '90%',
     paddingTop: 20,
   },
   title: {
     textAlign: 'center',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
   fullName: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
     fontSize: 18,
   },
   infoBlock: {
@@ -154,6 +158,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 16,
     marginTop: 10,
+    fontFamily: 'CircularStd-Book',
   },
   button: {
     width: '90%',
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 30,
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
 });
 

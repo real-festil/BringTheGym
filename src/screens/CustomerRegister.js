@@ -11,6 +11,7 @@ import {
   Platform,
   Picker,
   Image,
+  TouchableOpacity,
   Modal,
   ScrollView,
   Alert,
@@ -21,9 +22,9 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import firebase from '../../database/fireBase';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DatePicker from 'react-native-date-picker';
+
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
@@ -138,9 +139,8 @@ const CustomerRegister = props => {
       console.log(userPhoto, 'photo');
     });
   };
-  const onChangeDate = (event, selectedDate) => {
+  const onChangeDate = selectedDate => {
     const currentDate = selectedDate || date;
-    setDateModalVisible(Platform.OS === 'ios');
     setDate(currentDate);
   };
 
@@ -231,71 +231,42 @@ const CustomerRegister = props => {
               </Text>
             </TouchableOpacity>
           </View>
+          <View style={styles.inputItem}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#BBD5DA',
+                fontSize: 17,
+                borderRadius: 15,
+                width: width - 40,
+              }}
+              onPress={() => setDateModalVisible(true)}>
+              <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+                {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
+              </Text>
+            </TouchableOpacity>
 
-          {Platform.OS == 'android' ? (
-            <View style={styles.inputItem}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#BBD5DA',
-                  fontSize: 17,
-                  borderRadius: 15,
-                  width: width - 40,
-                }}
-                onPress={() => setDateModalVisible(true)}>
-                <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
-                  {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
-                </Text>
-              </TouchableOpacity>
-
-              {dateModalVisible && (
-                <DateTimePicker
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={dateModalVisible}
+              onRequestClose={() => {
+                setDateModalVisible(!dateModalVisible);
+              }}>
+              <View style={styles.modalStyle}>
+                <DatePicker
                   textColor="#000"
-                  style={styles.input}
-                  value={date}
-                  display="spinner"
-                  onChange={onChangeDate}
+                  mode="date"
+                  date={date}
+                  onDateChange={onChangeDate}
                 />
-              )}
-            </View>
-          ) : (
-            <View style={styles.inputItem}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#BBD5DA',
-                  fontSize: 17,
-                  borderRadius: 15,
-                  width: width - 40,
-                }}
-                onPress={() => setDateModalVisible(true)}>
-                <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
-                  {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
-                </Text>
-              </TouchableOpacity>
-
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={dateModalVisible}
-                onRequestClose={() => {
-                  setDateModalVisible(!dateModalVisible);
-                }}>
-                <View style={styles.modalStyle}>
-                  <DateTimePicker
-                    textColor="#000"
-                    style={styles.input}
-                    value={date}
-                    display="spinner"
-                    onChange={onChangeDate}
-                  />
-                  <TouchableOpacity
-                    style={styles.submit}
-                    onPress={() => setDateModalVisible(!dateModalVisible)}>
-                    <Text style={styles.textStyle}>Submit</Text>
-                  </TouchableOpacity>
-                </View>
-              </Modal>
-            </View>
-          )}
+                <TouchableOpacity
+                  style={styles.submit}
+                  onPress={() => setDateModalVisible(!dateModalVisible)}>
+                  <Text style={styles.textStyle}>Submit</Text>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+          </View>
 
           {Platform.OS == 'android' ? (
             <View style={styles.inputItem}>

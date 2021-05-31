@@ -4,20 +4,14 @@ import {
   Animated,
   Text,
   Image,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 
 const TrainerModal = ({user, onClose, onAddTrainer, isAdded}) => {
-  const {
-    fullName,
-    bio,
-    email,
-    qualification,
-    specialities,
-    userPhoto,
-    uid,
-  } = user;
+  const {fullName, bio, email, qualification, specialities, userPhoto, uid} =
+    user;
 
   useEffect(() => {
     openAnimation();
@@ -55,48 +49,50 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded}) => {
       <Animated.View
         useNativeD
         style={[styles.modal, {transform: [{translateY}]}]}>
-        <Text style={styles.title}>Trainer</Text>
-        <View style={styles.imageContainer}>
-          <Image
-            style={styles.userImage}
-            source={
-              userPhoto !== 'none'
-                ? {
-                    uri: userPhoto,
-                  }
-                : require('../assets/profile_photo.png')
-            }
-          />
-          <Text style={styles.fullName}>{fullName}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Bio</Text>
-          <Text style={styles.info}>{bio}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Email</Text>
-          <Text style={styles.info}>{email}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Qualifications</Text>
-          <Text style={styles.info}>{qualification}</Text>
-        </View>
-        <View style={styles.infoBlock}>
-          <Text style={styles.subtitle}>Specialties</Text>
-          <Text style={styles.info}>{specialities}</Text>
-        </View>
-        <View
-          style={{
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => onAddTrainer(uid)}>
-            <Text style={styles.buttonText}>
-              {isAdded ? 'Unsubscribe' : 'Subscribe'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <ScrollView>
+          <Text style={styles.title}>Trainer</Text>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.userImage}
+              source={
+                userPhoto !== 'none'
+                  ? {
+                      uri: userPhoto,
+                    }
+                  : require('../assets/profile_photo.png')
+              }
+            />
+            <Text style={styles.fullName}>{fullName}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Bio</Text>
+            <Text style={styles.info}>{bio}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Email</Text>
+            <Text style={styles.info}>{email}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Qualifications</Text>
+            <Text style={styles.info}>{qualification}</Text>
+          </View>
+          <View style={styles.infoBlock}>
+            <Text style={styles.subtitle}>Specialties</Text>
+            <Text style={styles.info}>{specialities}</Text>
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => onAddTrainer(uid)}>
+              <Text style={styles.buttonText}>
+                {isAdded ? 'Unsubscribe' : 'Subscribe'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </Animated.View>
     </View>
   );
@@ -123,20 +119,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+    maxHeight: '90%',
     paddingTop: 20,
   },
   title: {
     textAlign: 'center',
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
   fullName: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
     fontSize: 18,
   },
   infoBlock: {
@@ -163,6 +160,7 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 16,
+    fontFamily: 'CircularStd-Book',
     marginTop: 10,
   },
   button: {
@@ -178,7 +176,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     color: 'white',
-    fontWeight: 'bold',
+    fontFamily: 'CircularStd-Bold',
   },
 });
 
