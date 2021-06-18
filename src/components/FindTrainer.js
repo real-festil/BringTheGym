@@ -7,6 +7,7 @@ const FindTrainer = ({onSearch}) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedSpec, setSelectedSpec] = useState([]);
   const [selectedQual, setSelectedQual] = useState([]);
+  const [selectedGoal, setSelectedGoal] = useState([]);
   const [trainers, setTrainers] = useState(null);
   const currentUserId = auth().currentUser.uid;
 
@@ -34,8 +35,43 @@ const FindTrainer = ({onSearch}) => {
   console.log('selectedQual', selectedQual);
   console.log('selectedSpec', selectedSpec);
 
+  const goals = [
+    'Muscle Gain',
+    'Endurance',
+    'Weight Loss',
+    'Dieting',
+    'Calisthenic',
+  ];
+
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Goals</Text>
+      <View style={styles.specContainer}>
+        {goals.map(goal => (
+          <TouchableOpacity
+            style={[
+              styles.specButton,
+              {
+                backgroundColor: selectedGoal.includes(goal)
+                  ? '#9ABDC2'
+                  : '#22191A',
+              },
+            ]}
+            onPress={() => {
+              selectedGoal.includes(goal)
+                ? setSelectedGoal(selectedGoal.filter(item => item !== goal))
+                : setSelectedGoal([...selectedGoal, goal]);
+            }}>
+            <Text
+              style={[
+                styles.spec,
+                {color: selectedGoal.includes(goal) ? 'black' : '#9ABDC2'},
+              ]}>
+              {goal}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <Text style={styles.title}>Specialities</Text>
       {trainers && (
         <View style={styles.specContainer}>
@@ -133,6 +169,7 @@ const styles = StyleSheet.create({
   },
   specContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     marginVertical: 15,
   },
   specButton: {
@@ -140,9 +177,10 @@ const styles = StyleSheet.create({
     borderColor: '#9ABDC2',
     borderRadius: 15,
     alignSelf: 'flex-start',
+    marginBottom: 10,
     paddingHorizontal: 20,
     paddingVertical: 3,
-    marginRight: 20,
+    marginRight: 10,
   },
   spec: {
     fontFamily: 'CircularStd-Book',

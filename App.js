@@ -216,8 +216,8 @@ const screenOptions = navigation => ({
     <Image
       source={require('./src/assets/logo1.jpeg')}
       style={{
-        width: 80,
-        height: 50,
+        width: 63,
+        height: 38,
         marginRight: 10,
         marginTop: -60,
         position: 'relative',
@@ -392,7 +392,7 @@ export default function App() {
       {userLoggedIn ? (
         <NavigationContainer>
           <Drawer.Navigator
-            drawerStyle={{backgroundColor: 'transparent'}}
+            drawerStyle={{backgroundColor: 'transparent', width: '75%'}}
             drawerContentOptions={{
               activeTintColor: '#9ABDC2',
               inactiveTintColor: '#9ABDC2',
