@@ -14,7 +14,7 @@ import TrainerModal from '../components/TrainerModal';
 import CustomerModal from '../components/CustomerModal';
 
 const ClienteleScreen = () => {
-  const [trainers, setTrainers] = useState(null);
+  const [customers, setCustomers] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -25,15 +25,20 @@ const ClienteleScreen = () => {
       .ref('users')
       .once('value')
       .then(snapshot => {
-        setTrainers(
+        console.log('snapshot', Object.keys(snapshot.val()));
+        setCustomers(
           Object.values(snapshot._snapshot.value)
             .map((user, index) => ({
               ...user,
-              uid: snapshot._snapshot.childKeys[index],
+              uid: Object.keys(snapshot.val())[index],
             }))
             .filter(user => user.role === 'customer')
             .filter(user => user.trainers)
-            .filter(user => user.trainers.includes(currentUserId)),
+            .filter(user =>
+              user.trainers
+                .map(trainer => trainer.trainerId)
+                .includes(currentUserId),
+            ),
         );
       });
     database()
@@ -43,46 +48,241 @@ const ClienteleScreen = () => {
       });
   }, []);
 
+  const onStatusChange = async (id, status) => {
+    console.log(id);
+    let user;
+    await database()
+      .ref('users/' + id + '/')
+      .once('value')
+      .then(snapshot => {
+        user = snapshot.val();
+      });
+
+    user = {
+      ...user,
+      trainers: user.trainers.map(trainer => {
+        if (trainer.trainerId === currentUserId) {
+          return {...trainer, status};
+        }
+        return trainer;
+      }),
+    };
+
+    console.log('user.trainers', user.trainers);
+
+    await database()
+      .ref('users/' + id + '/')
+      .update({
+        trainers: user.trainers,
+      });
+
+    database()
+      .ref('users')
+      .once('value')
+      .then(snapshot => {
+        console.log('snapshot', Object.keys(snapshot.val()));
+        setCustomers(
+          Object.values(snapshot._snapshot.value)
+            .map((user, index) => ({
+              ...user,
+              uid: Object.keys(snapshot.val())[index],
+            }))
+            .filter(user => user.role === 'customer')
+            .filter(user => user.trainers)
+            .filter(user =>
+              user.trainers
+                .map(trainer => trainer.trainerId)
+                .includes(currentUserId),
+            ),
+        );
+      });
+
+    // if (
+    //   user.trainers &&
+    //   user.trainers.filter(trainer => trainer.trainerId === trainerId).length
+    // ) {
+    //   const updatedTrainers = user.trainers.filter(
+    //     trainer => trainer.trainerId !== trainerId,
+    //   );
+    //   await database()
+    //     .ref('users/' + currentUserId + '/')
+    //     .update({
+    //       trainers: updatedTrainers,
+    //     });
+    //   database()
+    //     .ref('users/' + currentUserId)
+    //     .once('value', snapshot => {
+    //       setCurrentUser(snapshot.val());
+    //     });
+    //   return;
+    // }
+
+    // if (user.trainers) {
+    //   await database()
+    //     .ref('users/' + currentUserId + '/')
+    //     .update({
+    //       trainers: [...user.trainers, {trainerId, status: 'pending'}],
+    //     });
+    //   database()
+    //     .ref('users/' + currentUserId)
+    //     .once('value', snapshot => {
+    //       setCurrentUser(snapshot.val());
+    //     });
+    //   return;
+    // }
+
+    // await database()
+    //   .ref('users/' + currentUserId + '/')
+    //   .update({
+    //     trainers: [{trainerId, status: 'pending'}],
+    //   });
+    // database()
+    //   .ref('users/' + currentUserId)
+    //   .once('value', snapshot => {
+    //     setCurrentUser(snapshot.val());
+    //   });
+  };
+
+  console.log('customers', customers);
+
   return (
     <View style={styles.container}>
-      {trainers && (
-        <ScrollView>
-          <View style={styles.cards}>
-            {trainers.map(trainer => (
-              <TouchableOpacity
-                onPress={() => {
-                  setIsModalVisible(true);
-                  setSelectedUser(trainer);
-                }}>
-                <View style={{...styles.card}}>
-                  {currentUser.trainers &&
-                    currentUser.trainers.includes(trainer.uid) && (
+      <Text style={styles.title}>Your Clients</Text>
+      {customers && (
+        <View>
+          {customers.filter(customer => {
+            const status = customer.trainers.find(
+              trainer => trainer.trainerId === currentUserId,
+            ).status;
+            if (status === 'accepted') {
+              return customer;
+            }
+          }).length > 0 ? (
+            <ScrollView horizontal>
+              <View style={styles.cards}>
+                {customers
+                  .filter(customer => {
+                    const status = customer.trainers.find(
+                      trainer => trainer.trainerId === currentUserId,
+                    ).status;
+                    if (status === 'accepted') {
+                      return customer;
+                    }
+                  })
+                  .map(customer => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setIsModalVisible(true);
+                        setSelectedUser(customer);
+                      }}>
+                      <View style={{...styles.card}}>
+                        <ImageBackground
+                          style={styles.userImage}
+                          source={
+                            customer.userPhoto !== 'none'
+                              ? {
+                                  uri: customer.userPhoto,
+                                }
+                              : {
+                                  uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
+                                }
+                          }>
+                          <View style={styles.textContainer}>
+                            <Text style={styles.userText}>
+                              {customer.fullName}
+                            </Text>
+                            <Text> </Text>
+                          </View>
+                        </ImageBackground>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <Text style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
+              You have no client yet.
+            </Text>
+          )}
+        </View>
+      )}
+      <Text style={styles.title}>Clients Asking for Match</Text>
+      {customers && (
+        <View>
+          {customers.filter(customer => {
+            const status = customer.trainers.find(
+              trainer => trainer.trainerId === currentUserId,
+            ).status;
+            if (status === 'pending') {
+              return customer;
+            }
+          }).length > 0 ? (
+            <ScrollView>
+              <View style={styles.clientTabs}>
+                {customers
+                  .filter(customer => {
+                    const status = customer.trainers.find(
+                      trainer => trainer.trainerId === currentUserId,
+                    ).status;
+                    if (status === 'pending') {
+                      return customer;
+                    }
+                  })
+                  .map(customer => (
+                    <View style={styles.clientTab}>
                       <Image
-                        style={styles.badge}
-                        source={require('../assets/galka.png')}
+                        style={styles.clientImage}
+                        source={
+                          customer.userPhoto !== 'none'
+                            ? {
+                                uri: customer.userPhoto,
+                              }
+                            : {
+                                uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
+                              }
+                        }
                       />
-                    )}
-
-                  <ImageBackground
-                    style={styles.userImage}
-                    source={
-                      trainer.userPhoto !== 'none'
-                        ? {
-                            uri: trainer.userPhoto,
-                          }
-                        : {
-                            uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                          }
-                    }>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.userText}>{trainer.fullName}</Text>
+                      <View style={styles.clientInfoBox}>
+                        <Text style={styles.clientName}>
+                          {customer.fullName}
+                        </Text>
+                        <Text style={styles.clientInfo}>
+                          Weight: {customer.weight}
+                        </Text>
+                        <Text style={styles.clientInfo}>
+                          Height: {customer.height}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.clientButton}
+                        onPress={() =>
+                          onStatusChange(customer.uid, 'rejected')
+                        }>
+                        <Image
+                          style={{width: 17, height: 17}}
+                          source={require('../assets/x.png')}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.clientButton2}
+                        onPress={() =>
+                          onStatusChange(customer.uid, 'accepted')
+                        }>
+                        <Image
+                          style={{width: 17, height: 15}}
+                          source={require('../assets/check.png')}
+                        />
+                      </TouchableOpacity>
                     </View>
-                  </ImageBackground>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </ScrollView>
+                  ))}
+              </View>
+            </ScrollView>
+          ) : (
+            <Text style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
+              You have no requests yet.
+            </Text>
+          )}
+        </View>
       )}
       {isModalVisible && (
         <CustomerModal
@@ -98,24 +298,34 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#9abdc1',
+    backgroundColor: '#22191A',
     position: 'relative',
     paddingTop: 10,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+  },
+  title: {
+    paddingHorizontal: 15,
+    marginBottom: 20,
+    fontSize: 18,
+    fontFamily: 'CircularStd-Bold',
+    color: '#9abdc1',
   },
   cards: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
+    alignSelf: 'flex-start',
     paddingHorizontal: 15,
   },
   card: {
     marginBottom: 20,
-    width: 170,
+    width: 150,
     height: 200,
     backgroundColor: 'red',
     borderRadius: 30,
     overflow: 'hidden',
     position: 'relative',
+    marginRight: 10,
     elevation: 4,
     shadowColor: 'black',
     shadowOffset: {width: 2, height: 2},
@@ -131,11 +341,11 @@ const styles = StyleSheet.create({
     top: 0,
   },
   textContainer: {
-    width: '100%',
-    height: 40,
+    height: 50,
     backgroundColor: '#c2d8df',
     position: 'absolute',
     bottom: 0,
+    width: '100%',
   },
   userText: {
     textAlign: 'center',
@@ -146,6 +356,49 @@ const styles = StyleSheet.create({
   userImage: {
     width: '100%',
     height: '100%',
+  },
+  clientTabs: {
+    flexDirection: 'column',
+    paddingHorizontal: 15,
+  },
+  clientTab: {
+    width: '100%',
+    height: 140,
+    borderWidth: 1,
+    borderColor: '#9abdc1',
+    borderRadius: 15,
+    flexDirection: 'row',
+    overflow: 'hidden',
+  },
+  clientImage: {
+    height: '100%',
+    width: '30%',
+  },
+  clientInfoBox: {
+    paddingLeft: 20,
+    paddingVertical: 10,
+    position: 'relative',
+  },
+  clientName: {
+    fontFamily: 'CircularStd-Bold',
+    color: '#9abdc1',
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  clientInfo: {
+    color: '#67686A',
+    fontFamily: 'CircularStd-Bold',
+    fontSize: 18,
+  },
+  clientButton: {
+    position: 'absolute',
+    right: 20,
+    top: 10,
+  },
+  clientButton2: {
+    position: 'absolute',
+    right: 20,
+    top: 70,
   },
 });
 

@@ -26,6 +26,8 @@ import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import auth from '@react-native-firebase/auth';
+import CheckBox from '@react-native-community/checkbox';
+import TermsModal from '../components/TermsModal';
 import LoginFunctions from '../utils/LoginFunction';
 
 const {width, height} = Dimensions.get('window');
@@ -48,6 +50,8 @@ const CustomerRegister = props => {
   const [bio, setBio] = useState(null);
   const [qualification, setQualification] = useState(null);
   const [specialities, setSpecialities] = useState('');
+  const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
+  const [isTermsSelected, setIsTermsSelected] = useState(false);
 
   function onAuthStateChanged(user) {
     if (user) {
@@ -275,13 +279,38 @@ const CustomerRegister = props => {
           </View>
         </View>
 
+        <TermsModal
+          visible={isTermsModalVisible}
+          onClose={() => setIsTermsModalVisible(false)}
+        />
+
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+          <CheckBox
+            value={isTermsSelected}
+            onValueChange={setIsTermsSelected}
+          />
+          <TouchableOpacity
+            style={{height: '100%', marginTop: 10}}
+            onPress={() => setIsTermsModalVisible(true)}>
+            <Text style={{fontSize: 18, textDecorationLine: 'underline'}}>
+              I agree to terms and conditions
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.buttonWrapper}>
           <TouchableOpacity
             style={styles.submit}
             onPress={() => props.navigation.goBack()}>
             <Text style={styles.textStyle}>Previous</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.submit} onPress={() => onSubmit()}>
+          <TouchableOpacity
+            style={[
+              styles.submit,
+              {backgroundColor: isTermsSelected ? '#21191A' : 'gray'},
+            ]}
+            onPress={() => (isTermsSelected ? onSubmit() : {})}>
             <Text style={styles.textStyle}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -381,7 +410,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   submit: {
-    marginTop: 90,
+    marginTop: 20,
     width: width / 2 - 40,
     display: 'flex',
     height: 60,

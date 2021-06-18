@@ -8,9 +8,19 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Modal,
 } from 'react-native';
 
-const EquipmentModal = ({equipment, onClose, onBuy, isAdded}) => {
+const EquipmentModal = ({
+  equipment,
+  onClose,
+  onBuy,
+  isAdded,
+  nextEquipment,
+  prevEquipment,
+  onNext,
+  onPrev,
+}) => {
   const {
     id,
     weight,
@@ -24,11 +34,12 @@ const EquipmentModal = ({equipment, onClose, onBuy, isAdded}) => {
   } = equipment;
 
   useEffect(() => {
-    openAnimation();
+    // openAnimation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const translateY = useRef(new Animated.Value(700)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
 
   const openAnimation = () => {
     Animated.timing(translateY, {
@@ -47,26 +58,52 @@ const EquipmentModal = ({equipment, onClose, onBuy, isAdded}) => {
   };
 
   const onCloseHandler = () => {
-    fadeOut();
-    setTimeout(() => {
-      onClose();
-    }, 200);
+    // fadeOut();
+    onClose();
+    // setTimeout(() => {
+    // }, 200);
   };
 
-  const {height} = Dimensions.get('window');
+  const onNextHandler = () => {
+    Animated.timing(translateX, {
+      toValue: -350,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      onNext(nextEquipment);
+      Animated.timing(translateX, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
+
+  const onPrevHandler = () => {
+    Animated.timing(translateX, {
+      toValue: 350,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      onPrev(prevEquipment);
+      Animated.timing(translateX, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+    });
+  };
 
   return (
-    <View style={styles.container}>
+    <Modal style={styles.container} animationType="slide">
       <TouchableOpacity style={styles.backdrop} onPress={onCloseHandler} />
-      <Animated.View
-        useNativeD
-        style={[styles.modal, {transform: [{translateY}]}, {height: '90%'}]}>
-        {/* <TouchableOpacity style={styles.backButton} onPress={onCloseHandler}>
+      <Animated.View useNativeD style={[styles.modal, {height: '100%'}]}>
+        <TouchableOpacity style={styles.backButton} onPress={onCloseHandler}>
           <Image
             source={require('../assets/back-arr.png')}
-            style={{width: 30, height: 30}}
+            style={{width: '100%', height: '100%'}}
           />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <ScrollView>
           <View style={styles.statsList}>
             <View style={styles.statsCard}>
@@ -78,7 +115,7 @@ const EquipmentModal = ({equipment, onClose, onBuy, isAdded}) => {
             </View>
             <View style={styles.statsCard}>
               <Text style={styles.statsTitle}>Number</Text>
-              <Text />
+              <Text style={styles.statsSubTitle} />
               <View style={styles.statsValue}>
                 <Text style={styles.statsValueText}>{number}</Text>
               </View>
@@ -93,39 +130,85 @@ const EquipmentModal = ({equipment, onClose, onBuy, isAdded}) => {
           </View>
           <Text style={styles.title}>{name}</Text>
           <View style={styles.imageContainer}>
-            <Image
-              style={styles.userImage}
-              source={
-                image !== 'none'
-                  ? {
-                      uri: image,
-                    }
-                  : require('../assets/profile_photo.png')
-              }
-            />
+            {/* {prevEquipment && (
+              <TouchableOpacity
+                style={styles.prevBlock}
+                onPress={onPrevHandler}>
+                <Image
+                  style={styles.prevImage}
+                  source={require('../assets/arrow.png')}
+                />
+              </TouchableOpacity>
+            )} */}
+            <Animated.View style={[styles.images, {transform: [{translateX}]}]}>
+              {prevEquipment && (
+                <Image
+                  style={styles.prevUserImage}
+                  source={
+                    prevEquipment.image !== 'none'
+                      ? {
+                          uri: prevEquipment.image,
+                        }
+                      : require('../assets/profile_photo.png')
+                  }
+                />
+              )}
+              <Image
+                style={styles.userImage}
+                source={
+                  image !== 'none'
+                    ? {
+                        uri: image,
+                      }
+                    : require('../assets/profile_photo.png')
+                }
+              />
+              {nextEquipment && (
+                <Image
+                  style={styles.nextUserImage}
+                  source={
+                    nextEquipment.image !== 'none'
+                      ? {
+                          uri: nextEquipment.image,
+                        }
+                      : require('../assets/profile_photo.png')
+                  }
+                />
+              )}
+            </Animated.View>
+            {/* {nextEquipment && (
+              <TouchableOpacity
+                style={styles.nextBlock}
+                onPress={onNextHandler}>
+                <Image
+                  style={styles.nextImage}
+                  source={require('../assets/arrow.png')}
+                />
+              </TouchableOpacity>
+            )} */}
           </View>
           <View style={styles.infoBlock}>
             <Text style={styles.subtitle}>Details</Text>
             <Text style={styles.info}>{description}</Text>
           </View>
-          {!isAdded && (
-            <View style={styles.buyContainer}>
-              <Text style={styles.priceText}>${price}</Text>
-              <TouchableOpacity
-                style={styles.buyButton}
-                onPress={() => {
-                  fadeOut();
-                  setTimeout(() => {
-                    onBuy(id);
-                  }, 200);
-                }}>
-                <Text style={styles.buyText}>Add to Chart</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </ScrollView>
+        {!isAdded && (
+          <View style={styles.buyContainer}>
+            <Text style={styles.priceText}>${price}</Text>
+            <TouchableOpacity
+              style={styles.buyButton}
+              onPress={() => {
+                fadeOut();
+                setTimeout(() => {
+                  onBuy(id);
+                }, 200);
+              }}>
+              <Text style={styles.buyText}>Add to Chart</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </Animated.View>
-    </View>
+    </Modal>
   );
 };
 
@@ -146,18 +229,19 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: '#9abdc1',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    paddingTop: 0,
+    height: '100%',
+    paddingTop: 40,
   },
   backButton: {
     position: 'absolute',
     zIndex: 1000,
     width: 40,
     height: 40,
+    top: 5,
+    left: 10,
   },
   title: {
     textAlign: 'center',
@@ -177,12 +261,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 7,
   },
+  images: {
+    position: 'relative',
+  },
   userImage: {
     width: 250,
     height: 250,
     display: 'flex',
     marginTop: 10,
     backgroundColor: '#9abdc1',
+  },
+  nextUserImage: {
+    width: 250,
+    height: 250,
+    display: 'flex',
+    marginTop: 10,
+    backgroundColor: '#9abdc1',
+    position: 'absolute',
+    right: -350,
+  },
+  prevUserImage: {
+    width: 250,
+    height: 250,
+    display: 'flex',
+    marginTop: 10,
+    backgroundColor: '#9abdc1',
+    position: 'absolute',
+    left: -350,
   },
   imageContainer: {
     width: '100%',
@@ -193,6 +298,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     backgroundColor: '#9abdc1',
+    position: 'relative',
+  },
+  prevBlock: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: 40,
+    height: 80,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left: -10,
+    transform: [{rotate: '180deg'}],
+  },
+  prevImage: {
+    width: 20,
+    height: 20,
+  },
+  nextBlock: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: 40,
+    height: 80,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    right: -10,
+  },
+  nextImage: {
+    width: 20,
+    height: 20,
   },
   info: {
     fontFamily: 'CircularStd-Book',
@@ -260,6 +395,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     marginTop: 20,
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
   },
   priceText: {
     color: 'black',

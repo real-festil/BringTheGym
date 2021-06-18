@@ -28,6 +28,8 @@ target 'Bringthegym' do
 
   pod 'RNGoogleSignin', :path => '../node_modules/@react-native-community/google-signin'
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'BringthegymTests' do
     inherit! :complete
     # Pods for testing

@@ -7,7 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 const CustomerModal = ({user, onClose}) => {
   const {fullName, bio, email, weight, height, userPhoto, goals, train} = user;
@@ -44,53 +46,69 @@ const CustomerModal = ({user, onClose}) => {
     }, 200);
   };
 
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 150,
+  };
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backdrop} onPress={onCloseHandler} />
-      <Animated.View
-        useNativeD
-        style={[styles.modal, {transform: [{translateY}]}]}>
-        <ScrollView>
-          <Text style={styles.title}>Customer</Text>
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.userImage}
-              source={
-                userPhoto !== 'none'
-                  ? {
-                      uri: userPhoto,
-                    }
-                  : require('../assets/profile_photo.png')
-              }
+      <GestureRecognizer
+        config={config}
+        onSwipeDown={state => onCloseHandler()}>
+        <Modal transparent animationType="fade">
+          <View style={styles.backdrop}>
+            <TouchableOpacity
+              style={{width: '100%', height: '100%'}}
+              onPress={onCloseHandler}
             />
-            <Text style={styles.fullName}>{fullName}</Text>
           </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>Bio</Text>
-            <Text style={styles.info}>{bio}</Text>
-          </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>Email</Text>
-            <Text style={styles.info}>{email}</Text>
-          </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>Weight</Text>
-            <Text style={styles.info}>{weight}kg</Text>
-          </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>Height</Text>
-            <Text style={styles.info}>{height}cm</Text>
-          </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>How often customer train</Text>
-            <Text style={styles.info}>{train}</Text>
-          </View>
-          <View style={styles.infoBlock}>
-            <Text style={styles.subtitle}>Goals</Text>
-            <Text style={styles.info}>{goals}</Text>
-          </View>
-        </ScrollView>
-      </Animated.View>
+          <Animated.View
+            useNativeD
+            style={[styles.modal, {transform: [{translateY}]}]}>
+            <ScrollView>
+              <Text style={styles.title}>Customer</Text>
+              <View style={styles.imageContainer}>
+                <Image
+                  style={styles.userImage}
+                  source={
+                    userPhoto !== 'none'
+                      ? {
+                          uri: userPhoto,
+                        }
+                      : require('../assets/profile_photo.png')
+                  }
+                />
+                <Text style={styles.fullName}>{fullName}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Bio</Text>
+                <Text style={styles.info}>{bio}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Email</Text>
+                <Text style={styles.info}>{email}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Weight</Text>
+                <Text style={styles.info}>{weight}kg</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Height</Text>
+                <Text style={styles.info}>{height}cm</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>How often customer train</Text>
+                <Text style={styles.info}>{train}</Text>
+              </View>
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Goals</Text>
+                <Text style={styles.info}>{goals}</Text>
+              </View>
+            </ScrollView>
+          </Animated.View>
+        </Modal>
+      </GestureRecognizer>
     </View>
   );
 };
@@ -101,35 +119,38 @@ const styles = StyleSheet.create({
     width: '100%',
     top: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   backdrop: {
     position: 'absolute',
     width: '100%',
     top: 0,
     bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modal: {
-    backgroundColor: '#9abdc1',
+    backgroundColor: '#22191A',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    maxHeight: '90%',
+    maxHeight: '100%',
     paddingTop: 20,
   },
   title: {
     textAlign: 'center',
     fontSize: 24,
     fontFamily: 'CircularStd-Bold',
+    color: '#9ABDC2',
   },
   subtitle: {
     fontSize: 16,
+    color: '#9ABDC2',
     fontFamily: 'CircularStd-Bold',
   },
   fullName: {
     textAlign: 'center',
+    color: '#9ABDC2',
     fontFamily: 'CircularStd-Bold',
     fontSize: 18,
   },
@@ -158,22 +179,20 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 16,
     marginTop: 10,
+    color: '#9ABDC2',
     fontFamily: 'CircularStd-Book',
   },
-  button: {
-    width: '90%',
-    backgroundColor: 'black',
-    height: 60,
-    marginVertical: 10,
-    borderRadius: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
+  orderButton: {
+    borderWidth: 1,
+    borderColor: '#9ABDC2',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 3,
+    width: 90,
   },
-  buttonText: {
+  orderText: {
+    color: '#9ABDC2',
     textAlign: 'center',
-    fontSize: 30,
-    color: 'white',
-    fontFamily: 'CircularStd-Bold',
   },
 });
 
