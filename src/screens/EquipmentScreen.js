@@ -130,7 +130,7 @@ const EquipmentScreen = () => {
               </Text>
             </View>
           ) : (
-            <ScrollView horizontal>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.cards}>
                 {equipment
                   .filter(equip => {
@@ -191,7 +191,7 @@ const EquipmentScreen = () => {
               </Text>
             </View>
           ) : (
-            <ScrollView horizontal>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.cards}>
                 {filteredEquipment.map((equip, index) => (
                   <View>
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 130,
     height: 130,
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     borderRadius: 30,
     overflow: 'hidden',
     position: 'relative',

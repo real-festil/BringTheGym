@@ -156,13 +156,14 @@ const EditInfoModal = props => {
             <View style={styles.inputItem}>
               <TouchableOpacity
                 style={styles.userImage}
-                onPress={() => selectPhoto()}>
+                // onPress={() => selectPhoto()}
+              >
                 <Image
                   style={{width: 100, height: 100, resizeMode: 'contain'}}
                   source={
                     userPhoto
                       ? typeof userPhoto === 'string'
-                        ? {uri: userPhoto}
+                        ? {uri: userPhoto.uri}
                         : userPhoto
                       : require('../assets/profile_photo.png')
                   }

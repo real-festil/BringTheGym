@@ -124,8 +124,10 @@ const NavigationDrawerStructure = props => {
       database()
         .ref('users/' + user.uid)
         .on('value', snapshot => {
-          setRole(snapshot._snapshot.value.role);
-          setFullName(snapshot._snapshot.value.fullName);
+          if (snapshot.val()) {
+            setRole(snapshot.val().role);
+            setFullName(snapshot.val().fullName);
+          }
         });
     }
   });
@@ -137,7 +139,9 @@ const NavigationDrawerStructure = props => {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
       }}>
-      <TouchableOpacity onPress={toggleDrawer}>
+      <TouchableOpacity
+        onPress={toggleDrawer}
+        style={{position: 'relative', top: -24}}>
         {/*Donute Button Image */}
         <Image
           source={require('./src/assets/burger.png')}
@@ -147,8 +151,8 @@ const NavigationDrawerStructure = props => {
             marginLeft: 12,
             marginBottom: 20,
             marginTop: 10,
-            position: 'relative',
-            top: -24,
+            // position: 'relative',
+            // top: -24,
           }}
         />
       </TouchableOpacity>

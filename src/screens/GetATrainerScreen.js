@@ -122,7 +122,7 @@ const GetATrainerScreen = () => {
         {trainers && (
           <View>
             {userTrainers.length > 0 ? (
-              <ScrollView horizontal>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View style={styles.cards}>
                   {currentUser &&
                     userTrainers &&
@@ -193,7 +193,7 @@ const GetATrainerScreen = () => {
             </View>
             {trainers && (
               <View>
-                <ScrollView horizontal>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                   <View style={styles.cards}>
                     {currentUser &&
                     trainers &&
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: 150,
     height: 200,
-    backgroundColor: 'red',
+    backgroundColor: 'black',
     borderRadius: 30,
     overflow: 'hidden',
     position: 'relative',

@@ -64,7 +64,9 @@ const CustomerRegister = props => {
 
   function onAuthStateChanged(user) {
     if (user) {
-      props.navigation.navigate('Dashboard');
+      setTimeout(() => {
+        props.navigation.navigate('Dashboard');
+      }, 200);
     }
   }
 
