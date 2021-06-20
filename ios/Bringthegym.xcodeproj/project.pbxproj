@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* BringthegymTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BringthegymTests.m */; };
+		065F5A3B2DC94AA0AAFF2789 /* CircularStd-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		259701ECAA464E4C86AD7BFB /* Antonio-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8ED66A4806C941A5887B0C13 /* Antonio-Regular.ttf */; };
 		2ED3217D4DCF400F9537B60C /* Antonio-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 83CF8300925D4B9095BDF8B9 /* Antonio-Bold.ttf */; };
 		40B71B7102E8CBDF3A1AA187 /* libPods-Bringthegym-BringthegymTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6538E58DF16B0418C3436DA /* libPods-Bringthegym-BringthegymTests.a */; };
+		420858112EA742419140333A /* CircularStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */; };
 		4AA38357E30540E98F4E11D2 /* Antonio-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C44118C2C6C7420A9B76B739 /* Antonio-Light.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		87FA9C33EA4F48E8BEE7FE27 /* CircularStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */; };
 		B5559A842639AD9500516982 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B5559A832639AD9500516982 /* GoogleService-Info.plist */; };
 		B5F4D06F263C2FE5006E057D /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F4D06E263C2FE5006E057D /* File.swift */; };
 		C6CAF77612106F5F3708FB59 /* libPods-Bringthegym.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FD9D0E9265DADCAD38E4A5 /* libPods-Bringthegym.a */; };
-		420858112EA742419140333A /* CircularStd-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */; };
-		065F5A3B2DC94AA0AAFF2789 /* CircularStd-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */; };
-		87FA9C33EA4F48E8BEE7FE27 /* CircularStd-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */; };
+		C300514D6B184E7C8F6D8FFB /* Arial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB470B9E724646A39334AE0C /* Arial.ttf */; };
+		066B2E88025D4DC7BDE54BAD /* sans-serif.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8983370740C14BF2855EAD9F /* sans-serif.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,22 +47,24 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Bringthegym/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Bringthegym/main.m; sourceTree = "<group>"; };
 		35EE84A28A4FC49A1D92F56A /* Pods-Bringthegym-BringthegymTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bringthegym-BringthegymTests.debug.xcconfig"; path = "Target Support Files/Pods-Bringthegym-BringthegymTests/Pods-Bringthegym-BringthegymTests.debug.xcconfig"; sourceTree = "<group>"; };
+		6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Book.otf"; path = "../src/assets/fonts/CircularStd-Book.otf"; sourceTree = "<group>"; };
 		6DFA8E49095E14A83A86B4AA /* Pods-Bringthegym.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bringthegym.debug.xcconfig"; path = "Target Support Files/Pods-Bringthegym/Pods-Bringthegym.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Bringthegym/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		83CF8300925D4B9095BDF8B9 /* Antonio-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Antonio-Bold.ttf"; path = "../src/assets/fonts/Antonio-Bold.ttf"; sourceTree = "<group>"; };
 		89FD9D0E9265DADCAD38E4A5 /* libPods-Bringthegym.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bringthegym.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ED66A4806C941A5887B0C13 /* Antonio-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Antonio-Regular.ttf"; path = "../src/assets/fonts/Antonio-Regular.ttf"; sourceTree = "<group>"; };
+		916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Bold.ttf"; path = "../src/assets/fonts/CircularStd-Bold.ttf"; sourceTree = "<group>"; };
 		93ABD44E7FADE8C146D84F1B /* Pods-Bringthegym-BringthegymTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bringthegym-BringthegymTests.release.xcconfig"; path = "Target Support Files/Pods-Bringthegym-BringthegymTests/Pods-Bringthegym-BringthegymTests.release.xcconfig"; sourceTree = "<group>"; };
 		A58D49EE277796E0F72E49C3 /* Pods-Bringthegym.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bringthegym.release.xcconfig"; path = "Target Support Files/Pods-Bringthegym/Pods-Bringthegym.release.xcconfig"; sourceTree = "<group>"; };
 		B5559A832639AD9500516982 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Bringthegym/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B5F4D019263C2651006E057D /* Bringthegym-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bringthegym-Bridging-Header.h"; sourceTree = "<group>"; };
 		B5F4D06E263C2FE5006E057D /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "CircularStd-Book.ttf"; path = "../src/assets/fonts/CircularStd-Book.ttf"; sourceTree = "<group>"; };
 		C44118C2C6C7420A9B76B739 /* Antonio-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Antonio-Light.ttf"; path = "../src/assets/fonts/Antonio-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F6538E58DF16B0418C3436DA /* libPods-Bringthegym-BringthegymTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Bringthegym-BringthegymTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */ = {isa = PBXFileReference; name = "CircularStd-Book.otf"; path = "../src/assets/fonts/CircularStd-Book.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */ = {isa = PBXFileReference; name = "CircularStd-Book.ttf"; path = "../src/assets/fonts/CircularStd-Book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */ = {isa = PBXFileReference; name = "CircularStd-Bold.ttf"; path = "../src/assets/fonts/CircularStd-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DB470B9E724646A39334AE0C /* Arial.ttf */ = {isa = PBXFileReference; name = "Arial.ttf"; path = "../src/assets/fonts/Arial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8983370740C14BF2855EAD9F /* sans-serif.ttf */ = {isa = PBXFileReference; name = "sans-serif.ttf"; path = "../src/assets/fonts/sans-serif.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,8 @@
 				6B42650B3C26457283AEB1D4 /* CircularStd-Book.otf */,
 				C2FA13D6F5344DBE9D081094 /* CircularStd-Book.ttf */,
 				916C7905D39C42698AB699F1 /* CircularStd-Bold.ttf */,
+				DB470B9E724646A39334AE0C /* Arial.ttf */,
+				8983370740C14BF2855EAD9F /* sans-serif.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -287,6 +293,8 @@
 				420858112EA742419140333A /* CircularStd-Book.otf in Resources */,
 				065F5A3B2DC94AA0AAFF2789 /* CircularStd-Book.ttf in Resources */,
 				87FA9C33EA4F48E8BEE7FE27 /* CircularStd-Bold.ttf in Resources */,
+				C300514D6B184E7C8F6D8FFB /* Arial.ttf in Resources */,
+				066B2E88025D4DC7BDE54BAD /* sans-serif.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

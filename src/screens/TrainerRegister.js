@@ -289,6 +289,8 @@ const CustomerRegister = props => {
           <CheckBox
             value={isTermsSelected}
             onValueChange={setIsTermsSelected}
+            boxType="square"
+            style={{marginRight: Platform.OS === 'ios' ? 10 : 0}}
           />
           <TouchableOpacity
             style={{height: '100%', marginTop: 10}}

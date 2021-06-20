@@ -28,9 +28,9 @@ import CustomerProfileScreen from './src/screens/CustomerProfileScreen';
 import TrainerProfileScreen from './src/screens/TrainerProfileScreen';
 import ClienteleScreen from './src/screens/ClienteleScreen';
 import EquipmentScreen from './src/screens/EquipmentScreen';
-import {LogBox, Dimensions} from 'react-native';
-LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+import {LogBox, Dimensions, Platform} from 'react-native';
+// LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+// LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -124,14 +124,20 @@ const NavigationDrawerStructure = props => {
       database()
         .ref('users/' + user.uid)
         .on('value', snapshot => {
+          console.log('here we go', user)
           if (snapshot.val()) {
             setRole(snapshot.val().role);
             setFullName(snapshot.val().fullName);
+            setUserPhoto(snapshot.val().userPhoto)
+          } else {
+            setUserPhoto(user.userPhoto)
+            setFullName(user.displayName)
           }
         });
     }
   });
 
+  console.log(userPhoto, 'userPhotoo')
   return (
     <View
       style={{
@@ -161,6 +167,7 @@ const NavigationDrawerStructure = props => {
           style={{
             flexDirection: 'row',
             marginLeft: 10,
+            paddingLeft: 5,
             marginBottom: 10,
             backgroundColor: '#22191A',
             // inactiveTintColor: '#9ABDC2',
@@ -176,7 +183,7 @@ const NavigationDrawerStructure = props => {
           <View style={{height: 'auto', justifyContent: 'flex-start'}}>
             <Image
               source={
-                userPhoto && userPhoto !== 'null'
+                userPhoto && userPhoto !== 'null' && userPhoto !== 'none'
                   ? {uri: userPhoto}
                   : require('./src/assets/profile_photo.png')
               }
@@ -329,7 +336,7 @@ function CustomDrawerContent(props) {
           position: 'absolute',
           zIndex: 1000000,
           left: 0,
-          top: 0,
+          top: Platform.OS === 'ios' ? 20 : 0,
         }}>
         {/*Donute Button Image */}
         <Image
@@ -382,7 +389,11 @@ export default function App() {
         .once('value')
         .then(snapshot => {
           console.log('snapshot', snapshot);
-          setRole(snapshot._snapshot.value.role);
+          if (snapshot.val() !== null) {
+            setRole(snapshot._snapshot.value.role || 'customer');
+          } else {
+            setRole('customer')
+          }
         });
     } else {
       setUserLoggedIn(false);

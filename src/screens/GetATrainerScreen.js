@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import TrainerModal from '../components/TrainerModal';
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#22191A',
     position: 'relative',
-    paddingTop: 10,
+    paddingTop: Platform.OS === 'ios' ? 30 : 10,
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },

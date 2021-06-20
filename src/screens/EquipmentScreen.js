@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Platform,
 } from 'react-native';
 import EquipmentModal from '../components/EquipmentModal';
 import auth from '@react-native-firebase/auth';
@@ -295,7 +296,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#22191A',
     position: 'relative',
-    paddingTop: 10,
+    paddingTop: Platform.OS === 'ios' ? 30 : 10,
     zIndex: 10,
   },
   title: {

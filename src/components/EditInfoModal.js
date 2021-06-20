@@ -37,6 +37,7 @@ import TermsModal from '../components/TermsModal';
 const {width, height} = Dimensions.get('window');
 
 const EditInfoModal = props => {
+  const currentUserId = auth().currentUser.uid;
   const [isLogged, setIsLogged] = useState('');
 
   const [errorMessage, setErrorMesasge] = useState('');
@@ -89,10 +90,34 @@ const EditInfoModal = props => {
     }
   }, [props]);
 
-  const onSubmit = () => {
-    const {currentUserId, user} = props;
+  useEffect(() => {
+    if (auth().currentUser) {
+      if (auth().currentUser.displayName) {
+        setFullName(auth().currentUser.displayName);
+      }
+      if (auth().currentUser.email) {
+        setEmail(auth().currentUser.email);
+      }
+    }
+  }, [])
 
-    console.log(currentUserId);
+  const onSubmit = () => {
+    const {currentUserId, user, isNew} = props;
+
+    console.log('currentUserId', currentUserId);
+    if (isNew) {
+      database()
+      .ref('users/' + currentUserId + '/')
+      .set({
+        fullName,
+        bio,
+        userPhoto,
+        goals,
+        train,
+        weight,
+        height,
+      });
+    } else {
     database()
       .ref('users/' + currentUserId + '/')
       .update({
@@ -105,6 +130,7 @@ const EditInfoModal = props => {
         weight,
         height,
       });
+    }
     props.navigation.navigate('Account');
     props.onClose();
   };

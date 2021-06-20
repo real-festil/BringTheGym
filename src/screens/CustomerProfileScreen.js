@@ -24,13 +24,23 @@ const CustomerProfileScreen = props => {
     auth().signOut();
   };
 
+
   useEffect(() => {
     database()
       .ref('users/' + currentUserId)
       .once('value', snapshot => {
-        setCurrentUser(snapshot.val());
+        if(snapshot.val()) {
+          console.log('this one call')
+          setCurrentUser(snapshot.val());
+        } else {
+          setCurrentUser(auth().currentUser);
+          // setCurrentUser({...currentUser, fullName: auth().currentUser.displayName, userPhoto: 'none'})
+          console.log('snapshot23', currentUser)
+        }
       });
   }, [currentUserId, isModalVisible]);
+
+  console.log('userPgoto', currentUser)
 
   return (
     <View style={styles.container}>
@@ -38,21 +48,31 @@ const CustomerProfileScreen = props => {
         <View style={styles.modal}>
           <ScrollView>
             <View style={styles.imageContainer}>
-              <Image
+              {currentUser.userPhoto ? (
+
+                <Image
                 style={styles.userImage}
                 source={
                   currentUser.userPhoto !== 'none'
-                    ? {
-                        uri: currentUser.userPhoto,
-                      }
-                    : require('../assets/profile_photo.png')
+                  ? {
+                    uri: currentUser.userPhoto,
+                  }
+                  : require('../assets/profile_photo.png')
                 }
-              />
-              <Text style={styles.fullName}>{currentUser.fullName}</Text>
+                />
+                ) : (
+                  <Image
+                style={styles.userImage}
+                source={
+                  require('../assets/profile_photo.png')
+                }
+                />
+                )}
+              <Text style={styles.fullName}>{currentUser.fullName || currentUser.displayName}</Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Bio</Text>
-              <Text style={styles.info}>{currentUser.bio}</Text>
+              <Text style={styles.info}>{currentUser.bio || 'You have no bio yet'}</Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Email</Text>
@@ -60,20 +80,24 @@ const CustomerProfileScreen = props => {
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Weight</Text>
-              <Text style={styles.info}>{currentUser.weight}kg</Text>
+              <Text style={styles.info}>{currentUser.weight ? currentUser.weight + 'kg' : 'Set your weight'}</Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Height</Text>
-              <Text style={styles.info}>{currentUser.height}cm</Text>
+              <Text style={styles.info}>{currentUser.height ? currentUser.height + 'cm' : 'Set your height'}</Text>
             </View>
-            <View style={styles.infoBlock}>
+            {currentUser.train ? (
+              <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>How often customer train</Text>
               <Text style={styles.info}>{currentUser.train}</Text>
             </View>
-            <View style={styles.infoBlock}>
+            ) : <></>}
+            {currentUser.goals && (
+              <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Goals</Text>
               <Text style={styles.info}>{currentUser.goals}</Text>
             </View>
+            )}
             <TermsModal
               visible={isTermsModalVisible}
               onClose={() => setIsTermsModalVisible(false)}
@@ -116,6 +140,7 @@ const CustomerProfileScreen = props => {
               currentUserId={currentUserId}
               onClose={() => setIsModalVisible(false)}
               navigation={props.navigation}
+              isNew={!currentUser.fullName}
             />
           )}
         </View>

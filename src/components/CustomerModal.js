@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '100%',
     paddingTop: 20,
+    paddingBottom: 20,
   },
   title: {
     textAlign: 'center',
@@ -157,8 +158,8 @@ const styles = StyleSheet.create({
   infoBlock: {
     paddingHorizontal: 30,
     paddingVertical: 7,
-    borderBottomColor: '#ade0db',
-    borderBottomWidth: 1,
+    // borderBottomColor: '#ade0db',
+    // borderBottomWidth: 1,
   },
   userImage: {
     width: 100,

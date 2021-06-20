@@ -93,6 +93,8 @@
 		<string>CircularStd-Book.otf</string>
 		<string>CircularStd-Book.ttf</string>
 		<string>CircularStd-Bold.ttf</string>
+		<string>Arial.ttf</string>
+		<string>sans-serif.ttf</string>
 	</array>
 </dict>
 </plist>

@@ -96,6 +96,7 @@ export default class Login extends Component {
       // this.setState({
       //   isLoading: true,
       // })
+      console.log('dataGoogle', data)
       return LoginFunctions.signInOrLink(
         auth.GoogleAuthProvider.PROVIDER_ID,
         credential,

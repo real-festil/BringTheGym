@@ -78,6 +78,7 @@ const FindTrainer = ({onSearch}) => {
           {trainers
             .map(trainer => trainer.specialities)
             .filter(spec => spec)
+            .filter((v, i, a) => a.indexOf(v) === i)
             .map(spec => (
               <TouchableOpacity
                 style={[
@@ -112,6 +113,7 @@ const FindTrainer = ({onSearch}) => {
           {trainers
             .map(trainer => trainer.qualification)
             .filter(qual => qual)
+            .filter((v, i, a) => a.indexOf(v) === i)
             .map(qual => (
               <TouchableOpacity
                 style={[

@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
   Dimensions,
   Modal,
 } from 'react-native';
@@ -233,14 +234,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     height: '100%',
-    paddingTop: 40,
+    paddingTop: Platform.OS === 'ios' ? 65:40,
   },
   backButton: {
     position: 'absolute',
     zIndex: 1000,
     width: 40,
     height: 40,
-    top: 5,
+    top: Platform.OS === 'ios' ? 35 : 5,
     left: 10,
   },
   title: {

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
+import GeolocationCommunity from '@react-native-community/geolocation';
 import {request, PERMISSIONS} from 'react-native-permissions';
 
 const DashboardScreen = () => {
@@ -17,6 +18,7 @@ const DashboardScreen = () => {
 
   React.useEffect(() => {
     requestLocationPermission();
+    GeolocationCommunity.getCurrentPosition(info => console.log(info))
     Geolocation.getCurrentPosition(
       position => {
         console.log('position', position);
@@ -62,6 +64,10 @@ const DashboardScreen = () => {
         console.warn(err);
       }
     } else {
+      Geolocation.requestAuthorization("whenInUse").then(res => 
+        Geolocation.getCurrentPosition(pos => setLocation(pos.coords), (err) => console.log('error', error), {timeout: 10000,
+          maximumAge: 10000,})
+      );
       request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
         if (result === 'granted') {
           setIsGranted(true);
@@ -255,6 +261,8 @@ const DashboardScreen = () => {
       ],
     },
   ];
+
+  console.log(location)
 
   return (
     <View style={styles.container}>
