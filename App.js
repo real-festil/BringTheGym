@@ -29,8 +29,8 @@ import TrainerProfileScreen from './src/screens/TrainerProfileScreen';
 import ClienteleScreen from './src/screens/ClienteleScreen';
 import EquipmentScreen from './src/screens/EquipmentScreen';
 import {LogBox, Dimensions, Platform} from 'react-native';
-// LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
-// LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -124,20 +124,20 @@ const NavigationDrawerStructure = props => {
       database()
         .ref('users/' + user.uid)
         .on('value', snapshot => {
-          console.log('here we go', user)
+          console.log('here we go', user);
           if (snapshot.val()) {
             setRole(snapshot.val().role);
             setFullName(snapshot.val().fullName);
-            setUserPhoto(snapshot.val().userPhoto)
+            setUserPhoto(snapshot.val().userPhoto);
           } else {
-            setUserPhoto(user.userPhoto)
-            setFullName(user.displayName)
+            setUserPhoto(user.userPhoto);
+            setFullName(user.displayName);
           }
         });
     }
   });
 
-  console.log(userPhoto, 'userPhotoo')
+  console.log(userPhoto, 'userPhotoo');
   return (
     <View
       style={{
@@ -228,7 +228,7 @@ const screenOptions = navigation => ({
       source={require('./src/assets/logo1.jpeg')}
       style={{
         width: 63,
-        height: 38,
+        height: 40,
         marginRight: 10,
         marginTop: -60,
         position: 'relative',
@@ -392,7 +392,7 @@ export default function App() {
           if (snapshot.val() !== null) {
             setRole(snapshot._snapshot.value.role || 'customer');
           } else {
-            setRole('customer')
+            setRole('customer');
           }
         });
     } else {
