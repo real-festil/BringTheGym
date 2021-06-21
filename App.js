@@ -30,6 +30,7 @@ import ClienteleScreen from './src/screens/ClienteleScreen';
 import EquipmentScreen from './src/screens/EquipmentScreen';
 import {LogBox, Dimensions, Platform} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
+import {TransitionPresets} from '@react-navigation/stack';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -253,6 +254,8 @@ const screenOptions = navigation => ({
     zIndex: 1,
     shadowColor: 'transparent',
   },
+  gestureEnabled: true,
+  ...TransitionPresets.ScaleFromCenterAndroid,
 });
 
 function DashboardStack({initialRouteName, navigation}) {
@@ -260,7 +263,11 @@ function DashboardStack({initialRouteName, navigation}) {
     <Stack.Navigator
       initialRouteName={initialRouteName}
       screenOptions={screenOptions}>
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen
+        name="Dashboard"
+        component={Dashboard}
+        options={{...TransitionPresets.ScaleFromCenterAndroid}}
+      />
     </Stack.Navigator>
   );
 }
@@ -280,7 +287,11 @@ function GetATrainerStack({initialRouteName, navigation}) {
     <Stack.Navigator
       initialRouteName={initialRouteName}
       screenOptions={screenOptions}>
-      <Drawer.Screen name="GetATrainerScreen" component={GetATrainerScreen} />
+      <Drawer.Screen
+        name="GetATrainerScreen"
+        component={GetATrainerScreen}
+        // options={{...TransitionPresets.ModalSlideFromBottomIOS}}
+      />
     </Stack.Navigator>
   );
 }
@@ -419,6 +430,9 @@ export default function App() {
         <NavigationContainer>
           <Drawer.Navigator
             drawerStyle={{backgroundColor: 'transparent', width: '75%'}}
+            screenOptions={{
+              ...TransitionPresets.ModalPresentationIOS,
+            }}
             drawerContentOptions={{
               activeTintColor: '#9ABDC2',
               inactiveTintColor: '#9ABDC2',
@@ -454,7 +468,10 @@ export default function App() {
             drawerContent={CustomDrawerContent}>
             <Drawer.Screen
               name="Dashboard"
-              options={{drawerLabel: 'Dashboard'}}
+              options={{
+                drawerLabel: 'Dashboard',
+                ...TransitionPresets.ScaleFromCenterAndroid,
+              }}
               component={DashboardStack}
             />
             {role === 'customer' ? (

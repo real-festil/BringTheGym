@@ -141,7 +141,7 @@ const GetATrainerScreen = () => {
                                 ? {
                                     uri: trainer.userPhoto,
                                   }
-                                : require('../assets/profile_photo.png')
+                                : require('../assets/profile_photo_sq.png')
                             }>
                             <View style={styles.textContainer}>
                               <Text style={styles.userText}>
@@ -281,7 +281,7 @@ const GetATrainerScreen = () => {
                                     ? {
                                         uri: trainer.userPhoto,
                                       }
-                                    : require('../assets/profile_photo.png')
+                                    : require('../assets/profile_photo_sq.png')
                                 }>
                                 <View style={styles.textContainer}>
                                   <Text style={styles.userText}>

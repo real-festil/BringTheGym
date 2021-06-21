@@ -227,7 +227,7 @@ const ClienteleScreen = () => {
                               ? {
                                   uri: customer.userPhoto,
                                 }
-                              : require('../assets/profile_photo.png')
+                              : require('../assets/profile_photo_sq.png')
                           }>
                           <View style={styles.textContainer}>
                             <Text style={styles.userText}>
@@ -279,7 +279,7 @@ const ClienteleScreen = () => {
                             ? {
                                 uri: customer.userPhoto,
                               }
-                            : require('../assets/profile_photo.png')
+                            : require('../assets/profile_photo_sq.png')
                         }
                       />
                       <View style={styles.clientInfoBox}>
