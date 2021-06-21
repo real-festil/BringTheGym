@@ -223,13 +223,11 @@ const ClienteleScreen = () => {
                         <ImageBackground
                           style={styles.userImage}
                           source={
-                            customer.userPhoto !== 'none'
+                            customer.userPhoto !== 'none' && customer.userPhoto
                               ? {
                                   uri: customer.userPhoto,
                                 }
-                              : {
-                                  uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                                }
+                              : require('../assets/profile_photo.png')
                           }>
                           <View style={styles.textContainer}>
                             <Text style={styles.userText}>
@@ -277,13 +275,11 @@ const ClienteleScreen = () => {
                       <Image
                         style={styles.clientImage}
                         source={
-                          customer.userPhoto !== 'none'
+                          customer.userPhoto !== 'none' && customer.userPhoto
                             ? {
                                 uri: customer.userPhoto,
                               }
-                            : {
-                                uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                              }
+                            : require('../assets/profile_photo.png')
                         }
                       />
                       <View style={styles.clientInfoBox}>

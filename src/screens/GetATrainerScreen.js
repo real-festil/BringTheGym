@@ -137,13 +137,11 @@ const GetATrainerScreen = () => {
                           <ImageBackground
                             style={styles.userImage}
                             source={
-                              trainer.userPhoto !== 'none'
+                              trainer.userPhoto !== 'none' && trainer.userPhoto
                                 ? {
                                     uri: trainer.userPhoto,
                                   }
-                                : {
-                                    uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                                  }
+                                : require('../assets/profile_photo.png')
                             }>
                             <View style={styles.textContainer}>
                               <Text style={styles.userText}>
@@ -278,7 +276,8 @@ const GetATrainerScreen = () => {
                               <ImageBackground
                                 style={styles.userImage}
                                 source={
-                                  trainer.userPhoto !== 'none'
+                                  trainer.userPhoto !== 'none' &&
+                                  trainer.userPhoto
                                     ? {
                                         uri: trainer.userPhoto,
                                       }
