@@ -11,9 +11,13 @@ import {
 } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
-const TrainerModal = ({user, onClose, onAddTrainer, isAdded}) => {
+const TrainerModal = ({user, onClose, onAddTrainer, isAdded, status}) => {
   const {fullName, bio, email, qualification, specialities, userPhoto, uid} =
     user;
+
+  console.log('status', status);
+
+  const userStatus = status && status.status ? status.status : '';
 
   useEffect(() => {
     openAnimation();
@@ -101,10 +105,22 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded}) => {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => onAddTrainer(uid)}>
+                  style={[
+                    styles.button,
+                    {
+                      backgroundColor:
+                        userStatus === 'pending' ? '#748e91' : '#9ABDC2',
+                    },
+                  ]}
+                  onPress={() =>
+                    userStatus === 'pending' ? {} : onAddTrainer(uid)
+                  }>
                   <Text style={styles.buttonText}>
-                    {isAdded ? 'Unsubscribe' : 'Subscribe'}
+                    {userStatus === 'pending'
+                      ? 'In review'
+                      : userStatus === 'accepted'
+                      ? 'Unsubscribe'
+                      : 'Subscribe'}
                   </Text>
                 </TouchableOpacity>
               </View>

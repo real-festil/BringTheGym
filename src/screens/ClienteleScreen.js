@@ -44,7 +44,7 @@ const ClienteleScreen = () => {
       });
     database()
       .ref('users/' + currentUserId)
-      .once('value', snapshot => {
+      .on('value', snapshot => {
         setCurrentUser(snapshot.val());
       });
   }, []);
@@ -68,6 +68,49 @@ const ClienteleScreen = () => {
         return trainer;
       }),
     };
+
+    if (status === 'rejected') {
+      if (
+        user.trainers &&
+        user.trainers.filter(trainer => trainer.trainerId === currentUserId)
+          .length
+      ) {
+        const updatedTrainers = user.trainers.filter(
+          trainer => trainer.trainerId !== currentUserId,
+        );
+        await database()
+          .ref('users/' + id + '/')
+          .update({
+            trainers: updatedTrainers,
+          });
+        database()
+          .ref('users/' + currentUserId)
+          .once('value', snapshot => {
+            setCurrentUser(snapshot.val());
+          });
+        database()
+          .ref('users')
+          .once('value')
+          .then(snapshot => {
+            console.log('snapshot', Object.keys(snapshot.val()));
+            setCustomers(
+              Object.values(snapshot._snapshot.value)
+                .map((user, index) => ({
+                  ...user,
+                  uid: Object.keys(snapshot.val())[index],
+                }))
+                .filter(user => user.role === 'customer')
+                .filter(user => user.trainers)
+                .filter(user =>
+                  user.trainers
+                    .map(trainer => trainer.trainerId)
+                    .includes(currentUserId),
+                ),
+            );
+          });
+        return;
+      }
+    }
 
     console.log('user.trainers', user.trainers);
 

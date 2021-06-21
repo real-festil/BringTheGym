@@ -32,6 +32,8 @@ target 'Bringthegym' do
 
   pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'BringthegymTests' do
     inherit! :complete
     # Pods for testing

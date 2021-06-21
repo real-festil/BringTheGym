@@ -24,23 +24,22 @@ const CustomerProfileScreen = props => {
     auth().signOut();
   };
 
-
   useEffect(() => {
     database()
       .ref('users/' + currentUserId)
-      .once('value', snapshot => {
-        if(snapshot.val()) {
-          console.log('this one call')
+      .on('value', snapshot => {
+        if (snapshot.val()) {
+          console.log('this one call');
           setCurrentUser(snapshot.val());
         } else {
           setCurrentUser(auth().currentUser);
           // setCurrentUser({...currentUser, fullName: auth().currentUser.displayName, userPhoto: 'none'})
-          console.log('snapshot23', currentUser)
+          console.log('snapshot23', currentUser);
         }
       });
   }, [currentUserId, isModalVisible]);
 
-  console.log('userPgoto', currentUser)
+  console.log('userPgoto', currentUser);
 
   return (
     <View style={styles.container}>
@@ -49,30 +48,31 @@ const CustomerProfileScreen = props => {
           <ScrollView>
             <View style={styles.imageContainer}>
               {currentUser.userPhoto ? (
-
                 <Image
-                style={styles.userImage}
-                source={
-                  currentUser.userPhoto !== 'none'
-                  ? {
-                    uri: currentUser.userPhoto,
+                  style={styles.userImage}
+                  source={
+                    currentUser.userPhoto !== 'none'
+                      ? {
+                          uri: currentUser.userPhoto,
+                        }
+                      : require('../assets/profile_photo.png')
                   }
-                  : require('../assets/profile_photo.png')
-                }
                 />
-                ) : (
-                  <Image
-                style={styles.userImage}
-                source={
-                  require('../assets/profile_photo.png')
-                }
+              ) : (
+                <Image
+                  style={styles.userImage}
+                  source={require('../assets/profile_photo.png')}
                 />
-                )}
-              <Text style={styles.fullName}>{currentUser.fullName || currentUser.displayName}</Text>
+              )}
+              <Text style={styles.fullName}>
+                {currentUser.fullName || currentUser.displayName}
+              </Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Bio</Text>
-              <Text style={styles.info}>{currentUser.bio || 'You have no bio yet'}</Text>
+              <Text style={styles.info}>
+                {currentUser.bio || 'You have no bio yet'}
+              </Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Email</Text>
@@ -80,23 +80,33 @@ const CustomerProfileScreen = props => {
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Weight</Text>
-              <Text style={styles.info}>{currentUser.weight ? currentUser.weight + 'kg' : 'Set your weight'}</Text>
+              <Text style={styles.info}>
+                {currentUser.weight
+                  ? currentUser.weight + 'kg'
+                  : 'Set your weight'}
+              </Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Height</Text>
-              <Text style={styles.info}>{currentUser.height ? currentUser.height + 'cm' : 'Set your height'}</Text>
+              <Text style={styles.info}>
+                {currentUser.height
+                  ? currentUser.height + 'cm'
+                  : 'Set your height'}
+              </Text>
             </View>
             {currentUser.train ? (
               <View style={styles.infoBlock}>
-              <Text style={styles.subtitle}>How often customer train</Text>
-              <Text style={styles.info}>{currentUser.train}</Text>
-            </View>
-            ) : <></>}
+                <Text style={styles.subtitle}>How often customer train</Text>
+                <Text style={styles.info}>{currentUser.train}</Text>
+              </View>
+            ) : (
+              <></>
+            )}
             {currentUser.goals && (
               <View style={styles.infoBlock}>
-              <Text style={styles.subtitle}>Goals</Text>
-              <Text style={styles.info}>{currentUser.goals}</Text>
-            </View>
+                <Text style={styles.subtitle}>Goals</Text>
+                <Text style={styles.info}>{currentUser.goals}</Text>
+              </View>
             )}
             <TermsModal
               visible={isTermsModalVisible}

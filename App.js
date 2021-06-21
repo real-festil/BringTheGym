@@ -29,6 +29,7 @@ import TrainerProfileScreen from './src/screens/TrainerProfileScreen';
 import ClienteleScreen from './src/screens/ClienteleScreen';
 import EquipmentScreen from './src/screens/EquipmentScreen';
 import {LogBox, Dimensions, Platform} from 'react-native';
+import RNBootSplash from 'react-native-bootsplash';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -121,6 +122,7 @@ const NavigationDrawerStructure = props => {
 
   auth().onAuthStateChanged(async function (user) {
     if (user) {
+      console.log('user.uid', user.uid);
       database()
         .ref('users/' + user.uid)
         .on('value', snapshot => {
@@ -132,6 +134,14 @@ const NavigationDrawerStructure = props => {
           } else {
             setUserPhoto(user.userPhoto);
             setFullName(user.displayName);
+            database()
+              .ref('users/' + user.uid + '/')
+              .set({
+                email: user.email,
+                fullName: user.displayName,
+                userPhoto: user.userPhoto,
+                role: 'customer',
+              });
           }
         });
     }
@@ -362,6 +372,7 @@ export default function App() {
   const [initialRouteName, setInitialRouteName] = useState('None');
   const [role, setRole] = useState(null);
   useEffect(() => {
+    RNBootSplash.hide({fade: true});
     setActiveUser();
   }, []);
 

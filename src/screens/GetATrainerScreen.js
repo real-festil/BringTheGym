@@ -40,7 +40,7 @@ const GetATrainerScreen = () => {
       });
     database()
       .ref('users/' + currentUserId)
-      .once('value', snapshot => {
+      .on('value', snapshot => {
         setCurrentUser(snapshot.val());
       });
   }, []);
@@ -282,9 +282,7 @@ const GetATrainerScreen = () => {
                                     ? {
                                         uri: trainer.userPhoto,
                                       }
-                                    : {
-                                        uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                                      }
+                                    : require('../assets/profile_photo.png')
                                 }>
                                 <View style={styles.textContainer}>
                                   <Text style={styles.userText}>
@@ -321,6 +319,14 @@ const GetATrainerScreen = () => {
                   currentUser.trainers.filter(
                     trainer => trainer.trainerId === selectedUser.uid,
                   ).length
+                : null
+            }
+            status={
+              currentUser
+                ? currentUser.trainers &&
+                  currentUser.trainers.find(
+                    trainer => trainer.trainerId === selectedUser.uid,
+                  )
                 : null
             }
             onAddTrainer={onAddTrainer}

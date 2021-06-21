@@ -99,38 +99,87 @@ const EditInfoModal = props => {
         setEmail(auth().currentUser.email);
       }
     }
-  }, [])
+  }, []);
+
+  const getPhotoUrl = async function (userId) {
+    const url = await storage()
+      .ref(userId + '/profile-image.png')
+      .getDownloadURL();
+
+    console.log(url);
+
+    return url;
+  };
 
   const onSubmit = () => {
     const {currentUserId, user, isNew} = props;
 
-    console.log('currentUserId', currentUserId);
     if (isNew) {
       database()
-      .ref('users/' + currentUserId + '/')
-      .set({
-        fullName,
-        bio,
-        userPhoto,
-        goals,
-        train,
-        weight,
-        height,
+        .ref('users/' + currentUserId + '/')
+        .set({
+          fullName,
+          bio,
+          // userPhoto,
+          goals,
+          train,
+          weight,
+          height,
+        });
+    } else {
+      database()
+        .ref('users/' + currentUserId + '/')
+        .update({
+          ...user,
+          fullName,
+          bio,
+          // userPhoto,
+          goals,
+          train,
+          weight,
+          height,
+        });
+    }
+    if (userPhoto) {
+      const reference = storage().ref(`${currentUserId}/profile-image.png`);
+      console.log('uploaded', userPhoto);
+      const task = reference.putFile(
+        Platform.OS == 'android' ? userPhoto.uri : userPhoto.sourceURL,
+      );
+
+      task.on('state_changed', taskSnapshot => {
+        console.log(
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+      });
+
+      task.then(() => {
+        console.log('Image uploaded to the bucket!');
+        getPhotoUrl(currentUserId)
+          .then(url => {
+            firebase
+              .database()
+              .ref('users/' + currentUserId + '/')
+              .update({
+                userPhoto: url,
+              });
+          })
+
+          .catch(error => {
+            console.log('Storing Error', error);
+          });
       });
     } else {
-    database()
-      .ref('users/' + currentUserId + '/')
-      .update({
-        ...user,
-        fullName,
-        bio,
-        userPhoto,
-        goals,
-        train,
-        weight,
-        height,
-      });
+      console.log('no photo');
+      firebase
+        .database()
+        .ref('users/' + currentUserId + '/')
+        .update({
+          userPhoto: 'none',
+        })
+        .catch(error => {});
     }
+
     props.navigation.navigate('Account');
     props.onClose();
   };
@@ -170,6 +219,8 @@ const EditInfoModal = props => {
   };
   console.log(Platform.OS, '');
 
+  console.log('userPhoto123', userPhoto);
+
   return (
     <Modal>
       <View style={styles.container}>
@@ -182,18 +233,25 @@ const EditInfoModal = props => {
             <View style={styles.inputItem}>
               <TouchableOpacity
                 style={styles.userImage}
-                // onPress={() => selectPhoto()}
-              >
-                <Image
-                  style={{width: 100, height: 100, resizeMode: 'contain'}}
-                  source={
-                    userPhoto
-                      ? typeof userPhoto === 'string'
-                        ? {uri: userPhoto.uri}
-                        : userPhoto
-                      : require('../assets/profile_photo.png')
-                  }
-                />
+                onPress={() => selectPhoto()}>
+                {userPhoto && userPhoto.toString().startsWith('http') ? (
+                  <Image
+                    style={{width: 100, height: 100, resizeMode: 'contain'}}
+                    source={{uri: userPhoto}}
+                  />
+                ) : (
+                  <Image
+                    style={{width: 100, height: 100, resizeMode: 'contain'}}
+                    source={
+                      userPhoto
+                        ? typeof userPhoto === 'string'
+                          ? {uri: userPhoto.uri}
+                          : userPhoto
+                        : require('../assets/profile_photo.png')
+                    }
+                  />
+                )}
+
                 <Text style={styles.plusIcon}>+</Text>
               </TouchableOpacity>
             </View>
