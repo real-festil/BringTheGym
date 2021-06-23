@@ -475,7 +475,7 @@ const TermsModal = ({visible, onClose}) => {
           contentWidth={contentWidth}
           tagsStyles={{
             p: {marginVertical: 10},
-            body: {backgroundColor: '#9abdc1', color: 'black'},
+            body: {backgroundColor: '#9abdc1', color: 'black', paddingTop: 20},
           }}
           containerStyle={{padding: 10}}
         />

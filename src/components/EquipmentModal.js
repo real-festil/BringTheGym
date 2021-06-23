@@ -145,6 +145,7 @@ const EquipmentModal = ({
               {prevEquipment && (
                 <Image
                   style={styles.prevUserImage}
+                  resizeMode="contain"
                   source={
                     prevEquipment.image !== 'none'
                       ? {
@@ -156,6 +157,7 @@ const EquipmentModal = ({
               )}
               <Image
                 style={styles.userImage}
+                resizeMode="contain"
                 source={
                   image !== 'none'
                     ? {
@@ -167,6 +169,7 @@ const EquipmentModal = ({
               {nextEquipment && (
                 <Image
                   style={styles.nextUserImage}
+                  resizeMode="contain"
                   source={
                     nextEquipment.image !== 'none'
                       ? {

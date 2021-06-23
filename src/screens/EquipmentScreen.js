@@ -151,6 +151,7 @@ const EquipmentScreen = () => {
                         }}
                         key={equip.id}>
                         <ImageBackground
+                          resizeMode="contain"
                           style={styles.userImage}
                           source={
                             equip.image !== 'none'
@@ -206,6 +207,7 @@ const EquipmentScreen = () => {
                       }}
                       key={equip.id}>
                       <ImageBackground
+                        resizeMode="contain"
                         style={styles.userImage}
                         source={
                           equip.image !== 'none'
