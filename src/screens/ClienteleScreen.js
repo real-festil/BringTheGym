@@ -227,7 +227,7 @@ const ClienteleScreen = () => {
                               ? {
                                   uri: customer.userPhoto,
                                 }
-                              : require('../assets/profile_photo_sq.png')
+                              : require('../assets/profile_photo_sq.jpg')
                           }>
                           <View style={styles.textContainer}>
                             <Text style={styles.userText}>
@@ -259,7 +259,7 @@ const ClienteleScreen = () => {
               return customer;
             }
           }).length > 0 ? (
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.clientTabs}>
                 {customers
                   .filter(customer => {
@@ -279,7 +279,7 @@ const ClienteleScreen = () => {
                             ? {
                                 uri: customer.userPhoto,
                               }
-                            : require('../assets/profile_photo_sq.png')
+                            : require('../assets/profile_photo_sq.jpg')
                         }
                       />
                       <View style={styles.clientInfoBox}>

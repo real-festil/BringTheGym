@@ -21,7 +21,7 @@ const GetATrainerScreen = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [filters, setFilters] = useState(null);
-  const [isSearchDisplay, setIsSearchDisplay] = useState(false);
+  const [isSearchDisplay, setIsSearchDisplay] = useState(true);
   const currentUserId = auth().currentUser.uid;
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const GetATrainerScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>My Coaches</Text>
         {trainers && (
           <View>
@@ -141,7 +141,7 @@ const GetATrainerScreen = () => {
                                 ? {
                                     uri: trainer.userPhoto,
                                   }
-                                : require('../assets/profile_photo_sq.png')
+                                : require('../assets/profile_photo_sq.jpg')
                             }>
                             <View style={styles.textContainer}>
                               <Text style={styles.userText}>
@@ -173,7 +173,28 @@ const GetATrainerScreen = () => {
             )}
           </View>
         )}
-        <Text style={styles.title}>Find a Trainer</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: 50,
+          }}>
+          <Text style={styles.titleTrainer}>Find a Trainer</Text>
+          <View
+            style={{height: 30, alignItems: 'center', flexDirection: 'row'}}>
+            <TouchableOpacity
+              onPress={() => setIsSearchDisplay(false)}
+              style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={require('../assets/icon.png')}
+                style={{width: 30, height: 30}}
+              />
+              <Text style={styles.titleTrainer}>Filters</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {isSearchDisplay ? (
           <>
             <View
@@ -183,12 +204,12 @@ const GetATrainerScreen = () => {
                 flexDirection: 'row',
                 paddingHorizontal: 15,
               }}>
-              <TouchableOpacity onPress={() => setIsSearchDisplay(false)}>
+              {/* <TouchableOpacity onPress={() => setIsSearchDisplay(false)}>
                 <Image
                   source={require('../assets/x.png')}
                   style={{width: 20, height: 20, marginBottom: 10}}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {trainers && (
               <View>
@@ -281,7 +302,7 @@ const GetATrainerScreen = () => {
                                     ? {
                                         uri: trainer.userPhoto,
                                       }
-                                    : require('../assets/profile_photo_sq.png')
+                                    : require('../assets/profile_photo_sq.jpg')
                                 }>
                                 <View style={styles.textContainer}>
                                   <Text style={styles.userText}>
@@ -307,6 +328,8 @@ const GetATrainerScreen = () => {
               setFilters(selectedFilters);
               setIsSearchDisplay(true);
             }}
+            selectedFilters={filters}
+            onClose={() => setIsSearchDisplay(true)}
           />
         )}
         {isModalVisible && (
@@ -353,6 +376,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'CircularStd-Bold',
     color: '#9abdc1',
+  },
+  titleTrainer: {
+    fontSize: 18,
+    fontFamily: 'CircularStd-Bold',
+    color: '#9abdc1',
+    paddingHorizontal: 15,
+    paddingRight: 40,
   },
   cards: {
     flexDirection: 'row',

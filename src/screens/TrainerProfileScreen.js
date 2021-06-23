@@ -35,7 +35,7 @@ const TrainerProfileScreen = props => {
     <View style={styles.container}>
       {currentUser && (
         <View style={styles.modal}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.imageContainer}>
               <Image
                 style={styles.userImage}

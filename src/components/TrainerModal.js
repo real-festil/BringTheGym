@@ -69,7 +69,7 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded, status}) => {
           <Animated.View
             useNativeD
             style={[styles.modal, {transform: [{translateY}]}]}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.title}>Trainer</Text>
               <View style={styles.imageContainer}>
                 <Image

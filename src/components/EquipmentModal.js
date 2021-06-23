@@ -105,7 +105,7 @@ const EquipmentModal = ({
             style={{width: '100%', height: '100%'}}
           />
         </TouchableOpacity>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.statsList}>
             <View style={styles.statsCard}>
               <Text style={styles.statsTitle}>Weight</Text>
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: '100%',
     height: '100%',
-    paddingTop: Platform.OS === 'ios' ? 65:40,
+    paddingTop: Platform.OS === 'ios' ? 65 : 40,
   },
   backButton: {
     position: 'absolute',

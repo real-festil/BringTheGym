@@ -45,7 +45,7 @@ const CustomerProfileScreen = props => {
     <View style={styles.container}>
       {currentUser && (
         <View style={styles.modal}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.imageContainer}>
               {currentUser.userPhoto ? (
                 <Image

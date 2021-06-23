@@ -15,8 +15,7 @@ const htmlContent = `
 <div class=WordSection1>
 
 <p class=MsoNormal align=center style='text-align:center'><b><span
-style='font-size:16.0pt;line-height:50%;'>TERMS
-AND CONDITIONS </span></b></p>
+style='font-size:16.0pt;line-height:50%;'>TERMS AND CONDITIONS </span></b></p>
 
 <p class=MsoNormal align=center style='text-align:center; margin-top: -20px'><span
 style=''>Effective date: 1<sup>st</sup> May 2021</span></p>
@@ -468,7 +467,9 @@ const TermsModal = ({visible, onClose}) => {
           style={{width: '100%', height: '100%'}}
         />
       </TouchableOpacity>
-      <ScrollView style={{backgroundColor: '#9abdc1'}}>
+      <ScrollView
+        style={{backgroundColor: '#9abdc1'}}
+        showsVerticalScrollIndicator={false}>
         <HTML
           source={{html: htmlContent}}
           contentWidth={contentWidth}

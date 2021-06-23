@@ -66,7 +66,7 @@ const CustomerModal = ({user, onClose}) => {
           <Animated.View
             useNativeD
             style={[styles.modal, {transform: [{translateY}]}]}>
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
               <Text style={styles.title}>Customer</Text>
               <View style={styles.imageContainer}>
                 <Image

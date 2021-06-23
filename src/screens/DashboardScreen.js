@@ -18,7 +18,7 @@ const DashboardScreen = () => {
 
   React.useEffect(() => {
     requestLocationPermission();
-    GeolocationCommunity.getCurrentPosition(info => console.log(info))
+    GeolocationCommunity.getCurrentPosition(info => console.log(info));
     Geolocation.getCurrentPosition(
       position => {
         console.log('position', position);
@@ -64,9 +64,12 @@ const DashboardScreen = () => {
         console.warn(err);
       }
     } else {
-      Geolocation.requestAuthorization("whenInUse").then(res => 
-        Geolocation.getCurrentPosition(pos => setLocation(pos.coords), (err) => console.log('error', error), {timeout: 10000,
-          maximumAge: 10000,})
+      Geolocation.requestAuthorization('whenInUse').then(res =>
+        Geolocation.getCurrentPosition(
+          pos => setLocation(pos.coords),
+          err => console.log('error', error),
+          {timeout: 10000, maximumAge: 10000},
+        ),
       );
       request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
         if (result === 'granted') {
@@ -262,7 +265,7 @@ const DashboardScreen = () => {
     },
   ];
 
-  console.log(location)
+  console.log(location);
 
   return (
     <View style={styles.container}>
@@ -278,14 +281,18 @@ const DashboardScreen = () => {
           }}
           customMapStyle={mapStyle}>
           <Marker
-            image={require('../assets/pin.png')}
+            // image={require('../assets/pin.png')}
             coordinate={{
               latitude: location ? location.latitude : 137.78825,
               longitude: location ? location.longitude : -122.4324,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-            }}
-          />
+            }}>
+            <Image
+              source={require('../assets/pin.png')}
+              style={{width: 33, height: 44}}
+            />
+          </Marker>
         </MapView>
       </View>
     </View>
