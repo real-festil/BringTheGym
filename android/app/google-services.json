@@ -16,6 +16,14 @@
       "oauth_client": [
         {
           "client_id": "74892996588-fjad3bjk6q2dp97k0032bm8fm1dqchpr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bringthegym",
+            "certificate_hash": "fc5fc3fd6d0e26d4bd9847820a4f9588b7ac67df"
+          }
+        },
+        {
+          "client_id": "74892996588-fjad3bjk6q2dp97k0032bm8fm1dqchpr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

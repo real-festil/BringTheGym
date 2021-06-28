@@ -156,31 +156,47 @@ const NavigationDrawerStructure = props => {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
       }}>
-      <TouchableOpacity
-        onPress={toggleDrawer}
-        style={{position: 'relative', top: -24}}>
-        {/*Donute Button Image */}
-        <Image
-          source={require('./src/assets/burger.png')}
-          style={{
-            width: 25,
-            height: 25,
-            marginLeft: 12,
-            marginBottom: 20,
-            marginTop: 10,
-            // position: 'relative',
-            // top: -24,
-          }}
-        />
-      </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginLeft: 10,
+          paddingLeft: 5,
+          marginBottom: 10,
+          backgroundColor: '#22191A',
+          // inactiveTintColor: '#9ABDC2',
+          //   activeBackgroundColor: '#22191A',
+          width: Dimensions.get('window').width,
+          height: 60,
+          alignItems: 'center',
+          zIndex: 100000,
+          position: 'absolute',
+          bottom: -10,
+          left: -10,
+        }}>
+        <TouchableOpacity
+          onPress={toggleDrawer}
+          style={{position: 'relative', top: 5}}>
+          {/*Donute Button Image */}
+          <Image
+            source={require('./src/assets/burgerLight.png')}
+            style={{
+              width: 25,
+              height: 25,
+              marginLeft: 12,
+              marginBottom: 20,
+              marginTop: 10,
+              // position: 'relative',
+              // top: -24,
+            }}
+          />
+        </TouchableOpacity>
+      </View>
       {userData && (
         <View
           style={{
             flexDirection: 'row',
             marginLeft: 10,
             paddingLeft: 5,
-            marginBottom: 10,
-            backgroundColor: '#22191A',
             // inactiveTintColor: '#9ABDC2',
             //   activeBackgroundColor: '#22191A',
             width: Dimensions.get('window').width,
@@ -188,7 +204,7 @@ const NavigationDrawerStructure = props => {
             alignItems: 'center',
             zIndex: 100000,
             position: 'absolute',
-            bottom: -43,
+            top: 0,
             left: -10,
           }}>
           <View style={{height: 'auto', justifyContent: 'flex-start'}}>
@@ -211,7 +227,7 @@ const NavigationDrawerStructure = props => {
               style={{
                 fontSize: 16,
                 fontFamily: 'CircularStd-Bold',
-                color: '#9ABDC2',
+                color: 'black',
               }}>
               {fullName}
             </Text>

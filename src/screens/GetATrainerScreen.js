@@ -55,6 +55,9 @@ const GetATrainerScreen = () => {
         ),
       );
     }
+    if (currentUser && currentUser.trainers === undefined) {
+      setUserTrainers([]);
+    }
   }, [trainers, currentUser]);
 
   const onAddTrainer = async id => {
@@ -87,6 +90,19 @@ const GetATrainerScreen = () => {
         .once('value', snapshot => {
           setCurrentUser(snapshot.val());
         });
+      database()
+        .ref('users')
+        .once('value')
+        .then(snapshot => {
+          setTrainers(
+            Object.values(snapshot._snapshot.value)
+              .map((user, index) => ({
+                ...user,
+                uid: Object.keys(snapshot.val())[index],
+              }))
+              .filter(user => user.role === 'trainer'),
+          );
+        });
       return;
     }
 
@@ -115,6 +131,8 @@ const GetATrainerScreen = () => {
         setCurrentUser(snapshot.val());
       });
   };
+
+  console.log('userTrainers', userTrainers);
 
   return (
     <View style={styles.container}>

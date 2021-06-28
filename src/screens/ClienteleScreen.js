@@ -191,145 +191,150 @@ const ClienteleScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Your Clients</Text>
-      {customers && (
-        <View>
-          {customers.filter(customer => {
-            const status = customer.trainers.find(
-              trainer => trainer.trainerId === currentUserId,
-            ).status;
-            if (status === 'accepted') {
-              return customer;
-            }
-          }).length > 0 ? (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View style={styles.cards}>
-                {customers
-                  .filter(customer => {
-                    const status = customer.trainers.find(
-                      trainer => trainer.trainerId === currentUserId,
-                    ).status;
-                    if (status === 'accepted') {
-                      return customer;
-                    }
-                  })
-                  .map(customer => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setIsModalVisible(true);
-                        setSelectedUser(customer);
-                      }}>
-                      <View style={{...styles.card}}>
-                        <ImageBackground
-                          style={styles.userImage}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.title}>Your Clients</Text>
+        {customers && (
+          <View>
+            {customers.filter(customer => {
+              const status = customer.trainers.find(
+                trainer => trainer.trainerId === currentUserId,
+              ).status;
+              if (status === 'accepted') {
+                return customer;
+              }
+            }).length > 0 ? (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={styles.cards}>
+                  {customers
+                    .filter(customer => {
+                      const status = customer.trainers.find(
+                        trainer => trainer.trainerId === currentUserId,
+                      ).status;
+                      if (status === 'accepted') {
+                        return customer;
+                      }
+                    })
+                    .map(customer => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setIsModalVisible(true);
+                          setSelectedUser(customer);
+                        }}>
+                        <View style={{...styles.card}}>
+                          <ImageBackground
+                            style={styles.userImage}
+                            source={
+                              customer.userPhoto !== 'none' &&
+                              customer.userPhoto
+                                ? {
+                                    uri: customer.userPhoto,
+                                  }
+                                : require('../assets/profile_photo_sq.jpg')
+                            }>
+                            <View style={styles.textContainer}>
+                              <Text style={styles.userText}>
+                                {customer.fullName}
+                              </Text>
+                              <Text> </Text>
+                            </View>
+                          </ImageBackground>
+                        </View>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+              </ScrollView>
+            ) : (
+              <Text
+                style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
+                You have no client yet.
+              </Text>
+            )}
+          </View>
+        )}
+        <Text style={styles.title}>Clients Asking for Match</Text>
+        {customers && (
+          <View>
+            {customers.filter(customer => {
+              const status = customer.trainers.find(
+                trainer => trainer.trainerId === currentUserId,
+              ).status;
+              if (status === 'pending') {
+                return customer;
+              }
+            }).length > 0 ? (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.clientTabs}>
+                  {customers
+                    .filter(customer => {
+                      const status = customer.trainers.find(
+                        trainer => trainer.trainerId === currentUserId,
+                      ).status;
+                      if (status === 'pending') {
+                        return customer;
+                      }
+                    })
+                    .map(customer => (
+                      <View style={styles.clientTab}>
+                        <Image
+                          style={styles.clientImage}
                           source={
                             customer.userPhoto !== 'none' && customer.userPhoto
                               ? {
                                   uri: customer.userPhoto,
                                 }
                               : require('../assets/profile_photo_sq.jpg')
+                          }
+                        />
+                        <View style={styles.clientInfoBox}>
+                          <Text style={styles.clientName}>
+                            {customer.fullName}
+                          </Text>
+                          <Text style={styles.clientInfo}>
+                            Weight: {customer.weight}
+                          </Text>
+                          <Text style={styles.clientInfo}>
+                            Height: {customer.height}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={styles.clientButton}
+                          onPress={() =>
+                            onStatusChange(customer.uid, 'rejected')
                           }>
-                          <View style={styles.textContainer}>
-                            <Text style={styles.userText}>
-                              {customer.fullName}
-                            </Text>
-                            <Text> </Text>
-                          </View>
-                        </ImageBackground>
+                          <Image
+                            style={{width: 17, height: 17}}
+                            source={require('../assets/x.png')}
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.clientButton2}
+                          onPress={() =>
+                            onStatusChange(customer.uid, 'accepted')
+                          }>
+                          <Image
+                            style={{width: 17, height: 15}}
+                            source={require('../assets/check.png')}
+                          />
+                        </TouchableOpacity>
                       </View>
-                    </TouchableOpacity>
-                  ))}
-              </View>
-            </ScrollView>
-          ) : (
-            <Text style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
-              You have no client yet.
-            </Text>
-          )}
-        </View>
-      )}
-      <Text style={styles.title}>Clients Asking for Match</Text>
-      {customers && (
-        <View>
-          {customers.filter(customer => {
-            const status = customer.trainers.find(
-              trainer => trainer.trainerId === currentUserId,
-            ).status;
-            if (status === 'pending') {
-              return customer;
-            }
-          }).length > 0 ? (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <View style={styles.clientTabs}>
-                {customers
-                  .filter(customer => {
-                    const status = customer.trainers.find(
-                      trainer => trainer.trainerId === currentUserId,
-                    ).status;
-                    if (status === 'pending') {
-                      return customer;
-                    }
-                  })
-                  .map(customer => (
-                    <View style={styles.clientTab}>
-                      <Image
-                        style={styles.clientImage}
-                        source={
-                          customer.userPhoto !== 'none' && customer.userPhoto
-                            ? {
-                                uri: customer.userPhoto,
-                              }
-                            : require('../assets/profile_photo_sq.jpg')
-                        }
-                      />
-                      <View style={styles.clientInfoBox}>
-                        <Text style={styles.clientName}>
-                          {customer.fullName}
-                        </Text>
-                        <Text style={styles.clientInfo}>
-                          Weight: {customer.weight}
-                        </Text>
-                        <Text style={styles.clientInfo}>
-                          Height: {customer.height}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={styles.clientButton}
-                        onPress={() =>
-                          onStatusChange(customer.uid, 'rejected')
-                        }>
-                        <Image
-                          style={{width: 17, height: 17}}
-                          source={require('../assets/x.png')}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.clientButton2}
-                        onPress={() =>
-                          onStatusChange(customer.uid, 'accepted')
-                        }>
-                        <Image
-                          style={{width: 17, height: 15}}
-                          source={require('../assets/check.png')}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-              </View>
-            </ScrollView>
-          ) : (
-            <Text style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
-              You have no requests yet.
-            </Text>
-          )}
-        </View>
-      )}
-      {isModalVisible && (
-        <CustomerModal
-          user={selectedUser}
-          onClose={() => setIsModalVisible(false)}
-        />
-      )}
+                    ))}
+                </View>
+              </ScrollView>
+            ) : (
+              <Text
+                style={[styles.title, {color: '#67686A', marginBottom: 120}]}>
+                You have no requests yet.
+              </Text>
+            )}
+          </View>
+        )}
+        {isModalVisible && (
+          <CustomerModal
+            user={selectedUser}
+            onClose={() => setIsModalVisible(false)}
+          />
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -409,6 +414,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     flexDirection: 'row',
     overflow: 'hidden',
+    marginBottom: 20,
   },
   clientImage: {
     height: '100%',

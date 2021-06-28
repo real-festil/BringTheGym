@@ -61,6 +61,7 @@ const EditInfoModal = props => {
   const [trainModalVisible, setTrainModalVisible] = useState(false);
   const [bio, setBio] = useState(null);
   const [goals, setGoals] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (props.user) {
@@ -111,8 +112,10 @@ const EditInfoModal = props => {
     return url;
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const {currentUserId, user, isNew} = props;
+    setIsLoading(true);
+    let wait;
 
     if (isNew) {
       database()
@@ -169,6 +172,7 @@ const EditInfoModal = props => {
             console.log('Storing Error', error);
           });
       });
+      await task;
     } else {
       console.log('no photo');
       firebase
@@ -180,14 +184,18 @@ const EditInfoModal = props => {
         .catch(error => {});
     }
 
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 200);
+
     props.navigation.navigate('Account');
     props.onClose();
   };
 
   const selectPhoto = () => {
     ImagePicker.openPicker({
-      width: 100,
-      height: 100,
+      width: 300,
+      height: 300,
       cropping: true,
     }).then(image => {
       console.log(image, 'image');
@@ -224,6 +232,11 @@ const EditInfoModal = props => {
   return (
     <Modal>
       <View style={styles.container}>
+        {/* {isLoading && (
+          <View>
+            <Text>Loading</Text>
+          </View>
+        )} */}
         <ScrollView
           style={{width: width - 40}}
           showsVerticalScrollIndicator={false}>
@@ -591,7 +604,9 @@ const EditInfoModal = props => {
             <TouchableOpacity
               style={[styles.submit]}
               onPress={() => onSubmit()}>
-              <Text style={styles.textStyle}>Update</Text>
+              <Text style={styles.textStyle}>
+                {isLoading ? 'Updating...' : 'Update'}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

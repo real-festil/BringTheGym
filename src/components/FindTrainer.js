@@ -101,6 +101,11 @@ const FindTrainer = ({onSearch, onClose, selectedFilters}) => {
     'Weight Loss',
     'Dieting',
     'Calisthenic',
+    'Stretch',
+    'Fitness',
+    'Bodybuilding',
+    'Yoga',
+    'Sprinting',
   ];
 
   const loading = [
@@ -170,7 +175,7 @@ const FindTrainer = ({onSearch, onClose, selectedFilters}) => {
                 </TouchableOpacity>
               ))}
             </View>
-            <Text style={styles.title}>Specialities</Text>
+            {/* <Text style={styles.title}>Specialities</Text>
             {trainers ? (
               <View style={styles.specContainer}>
                 {trainers
@@ -263,7 +268,7 @@ const FindTrainer = ({onSearch, onClose, selectedFilters}) => {
                   </TouchableOpacity>
                 ))}
               </View>
-            )}
+            )} */}
             {/* <View
             style={{
               width: '100%',

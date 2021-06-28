@@ -195,51 +195,53 @@ const EquipmentScreen = () => {
           ) : (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.cards}>
-                {filteredEquipment.map((equip, index) => (
-                  <View>
-                    <TouchableOpacity
-                      style={styles.card}
-                      onPress={() => {
-                        setIsModalVisible(true);
-                        setSelectedEquipment(equip);
-                        setPrevEquipment(filteredEquipment[index - 1]);
-                        setNextEquipment(filteredEquipment[index + 1]);
-                      }}
-                      key={equip.id}>
-                      <ImageBackground
-                        resizeMode="contain"
-                        style={styles.userImage}
-                        source={
-                          equip.image !== 'none'
-                            ? {
-                                uri: equip.image,
-                              }
-                            : {
-                                uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
-                              }
-                        }
-                      />
-                    </TouchableOpacity>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.userText}>{equip.name}</Text>
-                    </View>
-                    <View
-                      style={{
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                        width: 130,
-                      }}>
+                {filteredEquipment
+                  .filter(equip => !equip.deleted)
+                  .map((equip, index) => (
+                    <View>
                       <TouchableOpacity
-                        style={styles.orderButton}
+                        style={styles.card}
                         onPress={() => {
-                          setSelectedId(equip.id);
-                          setIsAcceptModalVisible(true);
-                        }}>
-                        <Text style={styles.orderText}>Order</Text>
+                          setIsModalVisible(true);
+                          setSelectedEquipment(equip);
+                          setPrevEquipment(filteredEquipment[index - 1]);
+                          setNextEquipment(filteredEquipment[index + 1]);
+                        }}
+                        key={equip.id}>
+                        <ImageBackground
+                          resizeMode="contain"
+                          style={styles.userImage}
+                          source={
+                            equip.image !== 'none'
+                              ? {
+                                  uri: equip.image,
+                                }
+                              : {
+                                  uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
+                                }
+                          }
+                        />
                       </TouchableOpacity>
+                      <View style={styles.textContainer}>
+                        <Text style={styles.userText}>{equip.name}</Text>
+                      </View>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          flexDirection: 'row',
+                          width: 130,
+                        }}>
+                        <TouchableOpacity
+                          style={styles.orderButton}
+                          onPress={() => {
+                            setSelectedId(equip.id);
+                            setIsAcceptModalVisible(true);
+                          }}>
+                          <Text style={styles.orderText}>Order</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                  </View>
-                ))}
+                  ))}
               </View>
             </ScrollView>
           )}

@@ -117,8 +117,8 @@ const CustomerRegister = props => {
   };
   const selectPhoto = () => {
     ImagePicker.openPicker({
-      width: 100,
-      height: 100,
+      width: 300,
+      height: 300,
       cropping: true,
     }).then(image => {
       setuserPhoto({
