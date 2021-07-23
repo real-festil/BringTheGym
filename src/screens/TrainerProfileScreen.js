@@ -65,6 +65,24 @@ const TrainerProfileScreen = props => {
               <Text style={styles.subtitle}>Qualification</Text>
               <Text style={styles.info}>{currentUser.qualification}</Text>
             </View>
+            {currentUser.telegram && (
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Telegram</Text>
+                <Text style={styles.info}>{currentUser.telegram}</Text>
+              </View>
+            )}
+            {currentUser.whatsApp && (
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>WhatsApp</Text>
+                <Text style={styles.info}>{currentUser.whatsApp}</Text>
+              </View>
+            )}
+            {currentUser.facebook && (
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Facebook</Text>
+                <Text style={styles.info}>{currentUser.facebook}</Text>
+              </View>
+            )}
             <TermsModal
               visible={isTermsModalVisible}
               onClose={() => setIsTermsModalVisible(false)}

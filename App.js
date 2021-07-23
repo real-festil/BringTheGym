@@ -424,8 +424,7 @@ export default function App() {
       setUserLoggedIn(true);
       database()
         .ref('users/' + user.uid)
-        .once('value')
-        .then(snapshot => {
+        .on('value', snapshot => {
           console.log('snapshot', snapshot);
           if (snapshot.val() !== null) {
             setRole(snapshot._snapshot.value.role || 'customer');

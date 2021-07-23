@@ -50,6 +50,9 @@ const CustomerRegister = props => {
   const [bio, setBio] = useState(null);
   const [qualification, setQualification] = useState(null);
   const [specialities, setSpecialities] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [whatsApp, setWhatsApp] = useState('');
+  const [facebook, setFacebook] = useState('');
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [isTermsSelected, setIsTermsSelected] = useState(false);
 
@@ -79,7 +82,23 @@ const CustomerRegister = props => {
     }
   };
   const registerUser = () => {
-    if (email === '' || password === '' || fullName === '') {
+    if (telegram === '' && facebook === '' && whatsApp === '') {
+      Alert.alert(
+        'Enter details to signup or Login!',
+        'Telegram, WhatsApp or Facebook is require',
+        [
+          {
+            text: 'Login',
+            onPress: () => props.navigation.navigate('Login'),
+          },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+      );
+    } else if (email === '' || password === '' || fullName === '') {
       Alert.alert(
         'Enter details to signup or Login!',
         'Email,Password,Full Name is require',
@@ -109,6 +128,9 @@ const CustomerRegister = props => {
           qualification,
           specialities,
           userPhoto,
+          telegram,
+          whatsApp,
+          facebook,
         );
       } catch (error) {
         console.log(error.message);
@@ -274,6 +296,36 @@ const CustomerRegister = props => {
               onChangeText={value => setSpecialities(value)}
               value={specialities}
               placeholder={'Specialities'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setTelegram(value)}
+              value={telegram}
+              placeholder={'Telegram'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setWhatsApp(value)}
+              value={whatsApp}
+              placeholder={'WhatsApp'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setFacebook(value)}
+              value={facebook}
+              placeholder={'Facebook'}
               placeholderTextColor="rgba(0,0,0, 1)"
             />
           </View>

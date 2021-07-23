@@ -100,6 +100,24 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded, status}) => {
                 <Text style={styles.subtitle}>Specialties</Text>
                 <Text style={styles.info}>{specialities}</Text>
               </View>
+              {user.telegram && userStatus === 'accepted' && (
+                <View style={styles.infoBlock}>
+                  <Text style={styles.subtitle}>Telegram</Text>
+                  <Text style={styles.info}>{user.telegram}</Text>
+                </View>
+              )}
+              {user.whatsApp && userStatus === 'accepted' && (
+                <View style={styles.infoBlock}>
+                  <Text style={styles.subtitle}>WhatsApp</Text>
+                  <Text style={styles.info}>{user.whatsApp}</Text>
+                </View>
+              )}
+              {user.facebook && userStatus === 'accepted' && (
+                <View style={styles.infoBlock}>
+                  <Text style={styles.subtitle}>Facebook</Text>
+                  <Text style={styles.info}>{user.facebook}</Text>
+                </View>
+              )}
               <View
                 style={{
                   alignItems: 'center',

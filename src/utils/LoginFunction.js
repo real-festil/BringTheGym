@@ -174,6 +174,9 @@ const LoginFunctions = {
     qualification,
     specialities,
     userPhoto,
+    telegram,
+    whatsApp,
+    facebook,
   ) {
     this.saveCredential(provider, credential);
     let user = await auth()
@@ -197,6 +200,9 @@ const LoginFunctions = {
               bio: bio,
               qualification: qualification,
               specialities: specialities,
+              telegram,
+              whatsApp,
+              facebook,
               photoUrl: photoUrl,
               role: 'trainer',
             })

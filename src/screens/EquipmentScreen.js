@@ -44,14 +44,23 @@ const EquipmentScreen = () => {
     setIsModalVisible(false);
     setIsAcceptModalVisible(false);
     if (currentUser) {
-      if (currentUser.equipments) {
-        if (currentUser.equipments.includes(id)) {
+      if (currentUser.equipments && currentUser.equipments.length > 0) {
+        if (
+          currentUser.equipments.filter(
+            currEquip => currEquip.id === id && currEquip.status !== 'rejected',
+          ).length > 0
+        ) {
           return;
         } else {
           database()
             .ref('users/' + currentUserId + '/')
             .update({
-              equipments: [...currentUser.equipments, id],
+              equipments: [
+                ...currentUser.equipments.filter(
+                  currEquip => currEquip.id !== id,
+                ),
+                {id, status: 'pending', createdAt: JSON.stringify(new Date())},
+              ],
             });
           database()
             .ref('users/' + currentUserId)
@@ -64,7 +73,9 @@ const EquipmentScreen = () => {
         database()
           .ref('users/' + currentUserId + '/')
           .update({
-            equipments: [id],
+            equipments: [
+              {id, status: 'pending', createdAt: JSON.stringify(new Date())},
+            ],
           });
         database()
           .ref('users/' + currentUserId)
@@ -81,14 +92,30 @@ const EquipmentScreen = () => {
   if (equipment) {
     filteredEquipment = equipment.filter(equip => {
       if (selectedTab === 'equipments') {
-        if (currentUser && currentUser.equipments) {
-          return !currentUser.equipments.includes(equip.id);
+        if (
+          currentUser &&
+          currentUser.equipments &&
+          currentUser.equipments.length > 0
+        ) {
+          return (
+            !currentUser.equipments.filter(
+              currEquip => currEquip.id === equip.id,
+            ).length > 0
+          );
         }
         return equip;
       }
       if (selectedTab === 'myequipments') {
-        if (currentUser && currentUser.equipments) {
-          return currentUser.equipments.includes(equip.id);
+        if (
+          currentUser &&
+          currentUser.equipments &&
+          currentUser.equipments.length > 0
+        ) {
+          return (
+            currentUser.equipments.filter(
+              currEquip => currEquip.id === equip.id,
+            ).length > 0
+          );
         }
       }
     });
@@ -107,13 +134,21 @@ const EquipmentScreen = () => {
   console.log('currentTab', selectedTab);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.title}>Current Equipment</Text>
       {equipment && (
         <View>
           {!equipment.filter(equip => {
-            if (currentUser && currentUser.equipments) {
-              return currentUser.equipments.includes(equip.id);
+            if (
+              currentUser &&
+              currentUser.equipments &&
+              currentUser.equipments.length > 0
+            ) {
+              return (
+                currentUser.equipments
+                  .filter(equip => equip.status === 'successful')
+                  .filter(currEquip => currEquip.id === equip.id).length > 0
+              );
             }
           }).length ? (
             <View
@@ -135,8 +170,17 @@ const EquipmentScreen = () => {
               <View style={styles.cards}>
                 {equipment
                   .filter(equip => {
-                    if (currentUser && currentUser.equipments) {
-                      return currentUser.equipments.includes(equip.id);
+                    if (
+                      currentUser &&
+                      currentUser.equipments &&
+                      currentUser.equipments.length > 0
+                    ) {
+                      return (
+                        currentUser.equipments
+                          .filter(equip => equip.status === 'successful')
+                          .filter(currEquip => currEquip.id === equip.id)
+                          .length > 0
+                      );
                     }
                   })
                   .map((equip, index) => (
@@ -247,6 +291,193 @@ const EquipmentScreen = () => {
           )}
         </View>
       )}
+      <Text style={[styles.title, {marginTop: 20}]}>Ordered Equipment</Text>
+      {equipment && (
+        <View>
+          {!equipment.filter(equip => {
+            if (
+              currentUser &&
+              currentUser.equipments &&
+              currentUser.equipments.length > 0
+            ) {
+              return (
+                currentUser.equipments
+                  .filter(equip => equip.status === 'pending')
+                  .filter(currEquip => currEquip.id === equip.id).length > 0
+              );
+            }
+          }).length ? (
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#9ABDC2',
+                borderRadius: 7,
+                padding: 10,
+                height: 150,
+                margin: 15,
+                marginTop: 0,
+              }}>
+              <Text style={{color: '#9ABDC2', fontSize: 16}}>
+                You have no ordered equipment yet.
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              style={{marginBottom: 20}}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              <View style={styles.cards}>
+                {equipment
+                  .filter(equip => {
+                    if (
+                      currentUser &&
+                      currentUser.equipments &&
+                      currentUser.equipments.length > 0
+                    ) {
+                      return (
+                        currentUser.equipments
+                          .filter(equip => equip.status === 'pending')
+                          .filter(currEquip => currEquip.id === equip.id)
+                          .length > 0
+                      );
+                    }
+                  })
+                  .map((equip, index) => (
+                    <View>
+                      <TouchableOpacity
+                        style={styles.card}
+                        onPress={() => {
+                          setIsModalVisible(true);
+                          setSelectedEquipment(equip);
+                          setPrevEquipment(filteredEquipment[index - 1]);
+                          setNextEquipment(filteredEquipment[index + 1]);
+                        }}
+                        key={equip.id}>
+                        <ImageBackground
+                          resizeMode="contain"
+                          style={styles.userImage}
+                          source={
+                            equip.image !== 'none'
+                              ? {
+                                  uri: equip.image,
+                                }
+                              : {
+                                  uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
+                                }
+                          }
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.textContainer}>
+                        <Text style={styles.userText}>{equip.name}</Text>
+                      </View>
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+          )}
+        </View>
+      )}
+      <Text style={[styles.title, {marginTop: 0}]}>Expired Equipment</Text>
+      {equipment && (
+        <View>
+          {!equipment.filter(equip => {
+            if (
+              currentUser &&
+              currentUser.equipments &&
+              currentUser.equipments.length > 0
+            ) {
+              return (
+                currentUser.equipments
+                  .filter(equip => equip.status === 'rejected')
+                  .filter(currEquip => currEquip.id === equip.id).length > 0
+              );
+            }
+          }).length ? (
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#9ABDC2',
+                borderRadius: 7,
+                padding: 10,
+                height: 150,
+                margin: 15,
+                marginTop: 0,
+              }}>
+              <Text style={{color: '#9ABDC2', fontSize: 16}}>
+                You have no expired equipment.
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              style={{marginBottom: 20}}
+              horizontal
+              showsHorizontalScrollIndicator={false}>
+              <View style={styles.cards}>
+                {equipment
+                  .filter(equip => {
+                    if (
+                      currentUser &&
+                      currentUser.equipments &&
+                      currentUser.equipments.length > 0
+                    ) {
+                      return (
+                        currentUser.equipments
+                          .filter(equip => equip.status === 'rejected')
+                          .filter(currEquip => currEquip.id === equip.id)
+                          .length > 0
+                      );
+                    }
+                  })
+                  .map((equip, index) => (
+                    <View>
+                      <TouchableOpacity
+                        style={styles.card}
+                        onPress={() => {
+                          setIsModalVisible(true);
+                          setSelectedEquipment(equip);
+                          setPrevEquipment(filteredEquipment[index - 1]);
+                          setNextEquipment(filteredEquipment[index + 1]);
+                        }}
+                        key={equip.id}>
+                        <ImageBackground
+                          resizeMode="contain"
+                          style={styles.userImage}
+                          source={
+                            equip.image !== 'none'
+                              ? {
+                                  uri: equip.image,
+                                }
+                              : {
+                                  uri: 'https://www.levistrauss.com/wp-content/uploads/2020/05/Black_Box.png',
+                                }
+                          }
+                        />
+                      </TouchableOpacity>
+                      <View style={styles.textContainer}>
+                        <Text style={styles.userText}>{equip.name}</Text>
+                      </View>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          flexDirection: 'row',
+                          width: 130,
+                        }}>
+                        <TouchableOpacity
+                          style={styles.orderButton}
+                          onPress={() => {
+                            setSelectedId(equip.id);
+                            setIsAcceptModalVisible(true);
+                          }}>
+                          <Text style={styles.orderText}>Extend</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  ))}
+              </View>
+            </ScrollView>
+          )}
+        </View>
+      )}
       {isModalVisible && (
         <EquipmentModal
           equipment={selectedEquipment}
@@ -258,7 +489,12 @@ const EquipmentScreen = () => {
           onBuy={onBuy}
           isAdded={
             currentUser.equipments &&
-            currentUser.equipments.includes(selectedEquipment.id)
+            currentUser.equipments.length > 0 &&
+            currentUser.equipments.filter(
+              currEquip =>
+                currEquip.id === selectedEquipment.id &&
+                currEquip.status !== 'rejected',
+            ).length > 0
           }
         />
       )}
@@ -290,7 +526,7 @@ const EquipmentScreen = () => {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -302,6 +538,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     paddingTop: Platform.OS === 'ios' ? 30 : 10,
     zIndex: 10,
+    paddingBottom: 30,
   },
   title: {
     paddingHorizontal: 15,
