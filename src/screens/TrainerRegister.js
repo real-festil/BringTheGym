@@ -14,6 +14,7 @@ import {
   Modal,
   Image,
   TouchableOpacity,
+  Linking,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RadioForm, {
@@ -81,11 +82,51 @@ const CustomerRegister = props => {
       console.log('Email is Correct');
     }
   };
-  const registerUser = () => {
-    if (telegram === '' && facebook === '' && whatsApp === '') {
+  const registerUser = async () => {
+    if (telegram) {
+      const canOpenTg = await Linking.canOpenURL(telegram);
+      if (!canOpenTg) {
+        Alert.alert('Verify your Telegram link', 'Telegram link is not valid', [
+          {
+            text: 'Ok',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'ok',
+          },
+        ]);
+        return;
+      }
+    }
+    if (whatsApp) {
+      const canOpenWa = await Linking.canOpenURL(whatsApp);
+      if (!canOpenWa) {
+        Alert.alert('Verify your WhatsApp link', 'WhatsApp link is not valid', [
+          {
+            text: 'Ok',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'ok',
+          },
+        ]);
+        return;
+      }
+    }
+    if (facebook) {
+      const canOpenFb = await Linking.canOpenURL(facebook);
+      if (!canOpenFb) {
+        Alert.alert('Verify your Facebook link', 'Facebook link is not valid', [
+          {
+            text: 'Ok',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'ok',
+          },
+        ]);
+        return;
+      }
+    }
+
+    if (email === '' || password === '' || fullName === '') {
       Alert.alert(
         'Enter details to signup or Login!',
-        'Telegram, WhatsApp or Facebook is require',
+        'Email,Password,Full Name is require',
         [
           {
             text: 'Login',
@@ -98,10 +139,10 @@ const CustomerRegister = props => {
           },
         ],
       );
-    } else if (email === '' || password === '' || fullName === '') {
+    } else if (telegram === '' && facebook === '' && whatsApp === '') {
       Alert.alert(
         'Enter details to signup or Login!',
-        'Email,Password,Full Name is require',
+        'Telegram, WhatsApp or Facebook is require',
         [
           {
             text: 'Login',

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
+  Linking,
 } from 'react-native';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
@@ -52,6 +53,20 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded, status}) => {
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 150,
+  };
+
+  const openLink = async url => {
+    const supported = await Linking.canOpenURL(url);
+    console.log('url', url);
+    console.log('supported', supported);
+
+    if (supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      return;
+    }
   };
 
   return (
@@ -100,23 +115,42 @@ const TrainerModal = ({user, onClose, onAddTrainer, isAdded, status}) => {
                 <Text style={styles.subtitle}>Specialties</Text>
                 <Text style={styles.info}>{specialities}</Text>
               </View>
-              {user.telegram && userStatus === 'accepted' && (
-                <View style={styles.infoBlock}>
-                  <Text style={styles.subtitle}>Telegram</Text>
-                  <Text style={styles.info}>{user.telegram}</Text>
-                </View>
-              )}
-              {user.whatsApp && userStatus === 'accepted' && (
-                <View style={styles.infoBlock}>
-                  <Text style={styles.subtitle}>WhatsApp</Text>
-                  <Text style={styles.info}>{user.whatsApp}</Text>
-                </View>
-              )}
-              {user.facebook && userStatus === 'accepted' && (
-                <View style={styles.infoBlock}>
-                  <Text style={styles.subtitle}>Facebook</Text>
-                  <Text style={styles.info}>{user.facebook}</Text>
-                </View>
+              {userStatus === 'accepted' && (
+                <>
+                  <Text
+                    style={[
+                      styles.subtitle,
+                      {paddingHorizontal: 30, marginTop: 10},
+                    ]}>
+                    Contact Trainer
+                  </Text>
+                  <View style={styles.contact}>
+                    {user.telegram.length > 0 && (
+                      <TouchableOpacity onPress={() => openLink(user.telegram)}>
+                        <Image
+                          style={styles.contactIcon}
+                          source={require('../assets/telegram.png')}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    {user.whatsApp.length > 0 && (
+                      <TouchableOpacity onPress={() => openLink(user.whatsApp)}>
+                        <Image
+                          style={styles.contactIcon}
+                          source={require('../assets/whatsapp.png')}
+                        />
+                      </TouchableOpacity>
+                    )}
+                    {user.facebook.length > 0 && (
+                      <TouchableOpacity onPress={() => openLink(user.facebook)}>
+                        <Image
+                          style={styles.contactIcon}
+                          source={require('../assets/facebookIcon.png')}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </>
               )}
               <View
                 style={{
@@ -234,6 +268,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     fontFamily: 'CircularStd-Bold',
+  },
+  contact: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    paddingHorizontal: 30,
+  },
+  contactIcon: {
+    width: 40,
+    height: 40,
   },
 });
 

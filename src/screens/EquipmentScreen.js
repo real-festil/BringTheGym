@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import EquipmentModal from '../components/EquipmentModal';
 import auth from '@react-native-firebase/auth';
+import {Picker} from '@react-native-picker/picker';
+import moment from 'moment';
 
 const EquipmentScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,7 +26,11 @@ const EquipmentScreen = () => {
   const [isAcceptModalVisible, setIsAcceptModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [isBuying, setIsBuying] = useState(false);
+  const [selectedWeight, setSelectedWeight] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(1);
   const currentUserId = auth().currentUser.uid;
+
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   useEffect(() => {
     database()
@@ -40,7 +46,7 @@ const EquipmentScreen = () => {
       });
   }, []);
 
-  const onBuy = id => {
+  const onBuy = (id, monthsCount) => {
     setIsModalVisible(false);
     setIsAcceptModalVisible(false);
     if (currentUser) {
@@ -52,16 +58,38 @@ const EquipmentScreen = () => {
         ) {
           return;
         } else {
-          database()
-            .ref('users/' + currentUserId + '/')
-            .update({
-              equipments: [
-                ...currentUser.equipments.filter(
-                  currEquip => currEquip.id !== id,
-                ),
-                {id, status: 'pending', createdAt: JSON.stringify(new Date())},
-              ],
-            });
+          if (monthsCount) {
+            database()
+              .ref('users/' + currentUserId + '/')
+              .update({
+                equipments: [
+                  ...currentUser.equipments.filter(
+                    currEquip => currEquip.id !== id,
+                  ),
+                  {
+                    id,
+                    status: 'pending',
+                    createdAt: moment().format(),
+                    expiredAt: moment().add(monthsCount, 'M').format(),
+                  },
+                ],
+              });
+          } else {
+            database()
+              .ref('users/' + currentUserId + '/')
+              .update({
+                equipments: [
+                  ...currentUser.equipments.filter(
+                    currEquip => currEquip.id !== id,
+                  ),
+                  {
+                    id,
+                    status: 'pending',
+                    // createdAt: moment(),
+                  },
+                ],
+              });
+          }
           database()
             .ref('users/' + currentUserId)
             .once('value', snapshot => {
@@ -129,9 +157,7 @@ const EquipmentScreen = () => {
   };
 
   console.log('equipment', equipment);
-  console.log('filteredEquipment', filteredEquipment);
-  console.log('currentUser', currentUser);
-  console.log('currentTab', selectedTab);
+  console.log('selectedId', selectedId);
 
   return (
     <ScrollView style={styles.container}>
@@ -486,7 +512,10 @@ const EquipmentScreen = () => {
           onNext={item => onChangeEquipment(item)}
           onPrev={item => onChangeEquipment(item)}
           onClose={() => setIsModalVisible(false)}
-          onBuy={onBuy}
+          onBuy={id => {
+            setSelectedId(id);
+            setIsAcceptModalVisible(true);
+          }}
           isAdded={
             currentUser.equipments &&
             currentUser.equipments.length > 0 &&
@@ -510,19 +539,152 @@ const EquipmentScreen = () => {
             <Text style={styles.acceptModalText}>
               Are you sure you want to buy this equipment?
             </Text>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-              <TouchableOpacity
-                style={styles.orderButton}
-                onPress={() => onBuy(selectedId)}>
-                <Text style={styles.orderText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.orderButton}
-                onPress={() => setIsAcceptModalVisible(false)}>
-                <Text style={styles.orderText}>No</Text>
-              </TouchableOpacity>
-            </View>
+            {equipment && (
+              <>
+                {equipment.length > 0 &&
+                selectedId &&
+                equipment.find(equip => equip.id === selectedId).weights ? (
+                  <>
+                    {console.log('selectedW', selectedWeight, selectedMonth)}
+                    <Text style={styles.pickerText}>Select weight</Text>
+                    <Picker
+                      onValueChange={v => setSelectedWeight(v)}
+                      style={styles.picker}
+                      itemStyle={styles.pickerItem}
+                      selectedValue={
+                        selectedWeight ? selectedWeight : 'No weight selected'
+                      }>
+                      <Picker.Item label="No weight selected" value="" />
+                      {Object.keys(
+                        equipment.find(equip => equip.id === selectedId)
+                          .weights,
+                      )
+                        .map(key => [
+                          key,
+                          equipment.find(equip => equip.id === selectedId)
+                            .weights[key],
+                        ])
+                        .map(weight => (
+                          <Picker.Item
+                            label={weight[0] + ' | $' + weight[1]}
+                            value={weight[0]}
+                          />
+                        ))}
+                    </Picker>
+                    <Text style={styles.pickerText}>Select months</Text>
+                    <Picker
+                      onValueChange={v => setSelectedMonth(v)}
+                      style={styles.picker}
+                      itemStyle={styles.pickerItem}
+                      selectedValue={selectedMonth}>
+                      {months.map((m, i) => (
+                        <Picker.Item
+                          label={m.toString()}
+                          value={m.toString()}
+                        />
+                      ))}
+                    </Picker>
+                    {selectedMonth && selectedWeight && (
+                      <Text style={[styles.pickerText]}>
+                        Total price: $
+                        {(
+                          equipment.find(equip => equip.id === selectedId)
+                            .weights[selectedWeight] * selectedMonth
+                        ).toFixed(2)}
+                      </Text>
+                    )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        marginTop: 10,
+                      }}>
+                      {selectedMonth && selectedWeight ? (
+                        <TouchableOpacity
+                          style={[styles.orderButton]}
+                          onPress={() => {
+                            onBuy(selectedId, selectedMonth);
+                            setSelectedWeight(null);
+                            setSelectedMonth(1);
+                          }}>
+                          <Text style={styles.orderText}>Buy</Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity style={[styles.orderButton]}>
+                          <Text style={styles.orderText}>Buy</Text>
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity
+                        style={styles.orderButton}
+                        onPress={() => {
+                          setSelectedWeight(null);
+                          setSelectedMonth(1);
+                          setIsAcceptModalVisible(false);
+                        }}>
+                        <Text style={styles.orderText}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.pickerText}>Select months</Text>
+                    <Picker
+                      onValueChange={v => setSelectedMonth(v)}
+                      style={styles.picker}
+                      itemStyle={styles.pickerItem}
+                      selectedValue={selectedMonth}>
+                      {months.map((m, i) => (
+                        <Picker.Item
+                          label={m.toString()}
+                          value={m.toString()}
+                        />
+                      ))}
+                    </Picker>
+                    {selectedMonth &&
+                      equipment.find(equip => equip.id === selectedId) && (
+                        <Text style={[styles.pickerText]}>
+                          Total price: $
+                          {(
+                            equipment.find(equip => equip.id === selectedId)
+                              .price * selectedMonth
+                          ).toFixed(2)}
+                        </Text>
+                      )}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-around',
+                        marginTop: 10,
+                      }}>
+                      {selectedMonth ? (
+                        <TouchableOpacity
+                          style={[styles.orderButton]}
+                          onPress={() => {
+                            onBuy(selectedId, selectedMonth);
+                            setSelectedWeight(null);
+                            setSelectedMonth(1);
+                          }}>
+                          <Text style={styles.orderText}>Buy</Text>
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity style={[styles.orderButton]}>
+                          <Text style={styles.orderText}>Buy</Text>
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity
+                        style={styles.orderButton}
+                        onPress={() => {
+                          setSelectedWeight(null);
+                          setSelectedMonth(1);
+                          setIsAcceptModalVisible(false);
+                        }}>
+                        <Text style={styles.orderText}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                )}
+              </>
+            )}
           </View>
         </View>
       </Modal>
@@ -549,8 +711,10 @@ const styles = StyleSheet.create({
   },
   acceptModal: {
     width: 250,
-    height: 100,
+    // height: 400,
     padding: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
     margin: 0,
     backgroundColor: '#22191A',
     borderRadius: 15,
@@ -636,6 +800,22 @@ const styles = StyleSheet.create({
   orderText: {
     color: '#9ABDC2',
     textAlign: 'center',
+  },
+  pickerText: {
+    color: '#9ABDC2',
+    textAlign: 'left',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  picker: {
+    color: '#9ABDC2',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  pickerItem: {
+    color: '#9ABDC2',
+    textAlign: 'center',
+    fontSize: 16,
   },
 });
 

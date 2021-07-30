@@ -31,6 +31,8 @@ const TrainerProfileScreen = props => {
     auth().signOut();
   };
 
+  console.log('currentUser', currentUser);
+
   return (
     <View style={styles.container}>
       {currentUser && (
@@ -65,19 +67,19 @@ const TrainerProfileScreen = props => {
               <Text style={styles.subtitle}>Qualification</Text>
               <Text style={styles.info}>{currentUser.qualification}</Text>
             </View>
-            {currentUser.telegram && (
+            {currentUser.telegram.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>Telegram</Text>
                 <Text style={styles.info}>{currentUser.telegram}</Text>
               </View>
             )}
-            {currentUser.whatsApp && (
+            {currentUser.whatsApp.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>WhatsApp</Text>
                 <Text style={styles.info}>{currentUser.whatsApp}</Text>
               </View>
             )}
-            {currentUser.facebook && (
+            {currentUser.facebook.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>Facebook</Text>
                 <Text style={styles.info}>{currentUser.facebook}</Text>
