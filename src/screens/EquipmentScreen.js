@@ -162,7 +162,7 @@ const EquipmentScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Current Equipment</Text>
+      <Text style={styles.title}>My Equipment</Text>
       {equipment && (
         <View>
           {!equipment.filter(equip => {
@@ -318,7 +318,7 @@ const EquipmentScreen = () => {
           )}
         </View>
       )}
-      <Text style={[styles.title, {marginTop: 20}]}>Ordered Equipment</Text>
+      <Text style={[styles.title, {marginTop: 20}]}>Pending Equipment</Text>
       {equipment && (
         <View>
           {!equipment.filter(equip => {
@@ -696,6 +696,20 @@ const EquipmentScreen = () => {
                           setIsAcceptModalVisible(false);
                         }}>
                         <Text style={styles.orderText}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{width: '100%', alignItems: 'center'}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          Linking.openURL('mailto:Bringthegym@gmail.com')
+                        }
+                        style={[
+                          styles.orderButton,
+                          {width: 170, marginTop: 20, justifyContent: 'center'},
+                        ]}>
+                        <Text style={styles.orderText}>
+                          Ask for consultation
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </>
