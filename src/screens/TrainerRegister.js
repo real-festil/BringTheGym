@@ -6,7 +6,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   Dimensions,
   Platform,
   ScrollView,
@@ -16,13 +15,6 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
-import firebase from '../../database/fireBase';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -34,14 +26,10 @@ import LoginFunctions from '../utils/LoginFunction';
 const {width, height} = Dimensions.get('window');
 
 const CustomerRegister = props => {
-  const [isLogged, setIsLogged] = useState('');
-
-  const [errorMessage, setErrorMesasge] = useState('');
   const [fullName, setFullName] = useState('');
 
   const [address, setAddress] = useState(null);
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
   const [userPhoto, setuserPhoto] = useState(null);
 
   const [dateModalVisible, setDateModalVisible] = useState(false);
@@ -56,6 +44,183 @@ const CustomerRegister = props => {
   const [facebook, setFacebook] = useState('');
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [isTermsSelected, setIsTermsSelected] = useState(false);
+  const [activeField, setActiveField] = useState(0);
+
+  const fields = [
+    {
+      value: email,
+      setter: v => validateEmail(v),
+      placeholder: 'Email',
+      autoCompleteType: 'email',
+      errorText: 'Email is not valid',
+      errorValue: emailError,
+      isRequired: true,
+    },
+    {
+      value: password,
+      setter: setPassword,
+      placeholder: 'Password (min 6 characters)',
+      isSecure: true,
+      isRequired: true,
+      maxLength: 15,
+      minLength: 6,
+    },
+    {
+      value: fullName,
+      setter: setFullName,
+      placeholder: 'Full Name',
+      isRequired: true,
+    },
+    {
+      type: 'address',
+      component: (
+        <View style={styles.inputItem}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#BBD5DA',
+              fontSize: 17,
+              borderRadius: 15,
+              width: width - 40,
+            }}
+            onPress={() =>
+              props.navigation.navigate('AddressScreen', {
+                setAddress: setAddress,
+              })
+            }>
+            <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+              {address ? address : 'Address'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+    {
+      type: 'date',
+      component: (
+        <View style={styles.inputItem}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#BBD5DA',
+              fontSize: 17,
+              borderRadius: 15,
+              width: width - 40,
+            }}
+            onPress={() => setDateModalVisible(true)}>
+            <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+              {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
+            </Text>
+          </TouchableOpacity>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={dateModalVisible}>
+            <View style={styles.modalStyle}>
+              <DatePicker
+                textColor="#000"
+                mode="date"
+                date={date}
+                onDateChange={onChangeDate}
+              />
+              <TouchableOpacity
+                style={styles.submit}
+                onPress={() => {
+                  setDateModalVisible(false);
+                }}>
+                <Text style={styles.textStyle}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </View>
+      ),
+    },
+    {
+      value: bio,
+      setter: setBio,
+      placeholder: 'Bio',
+      maxLength: 150,
+    },
+    {
+      value: qualification,
+      setter: setQualification,
+      placeholder: 'Qualification',
+      maxLength: 150,
+    },
+    {
+      value: specialities,
+      setter: setSpecialities,
+      placeholder: 'Specialities',
+      maxLength: 150,
+    },
+    {
+      component: (
+        <React.Fragment>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setTelegram(value)}
+              value={telegram}
+              placeholder={'Telegram'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setWhatsApp(value)}
+              value={whatsApp}
+              placeholder={'WhatsApp'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={150}
+              onChangeText={value => setFacebook(value)}
+              value={facebook}
+              placeholder={'Facebook'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+            <CheckBox
+              value={isTermsSelected}
+              onValueChange={setIsTermsSelected}
+              boxType="square"
+              style={{marginRight: Platform.OS === 'ios' ? 10 : 0}}
+            />
+            <TouchableOpacity
+              style={{height: '100%', marginTop: 10}}
+              onPress={() => setIsTermsModalVisible(true)}>
+              <Text style={{fontSize: 18, textDecorationLine: 'underline'}}>
+                I agree to terms and conditions
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={() => setActiveField(activeField - 1)}>
+              <Text style={styles.textStyle}>Previous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.submit,
+                {backgroundColor: isTermsSelected ? '#21191A' : 'gray'},
+              ]}
+              onPress={() => (isTermsSelected ? onSubmit() : {})}>
+              <Text style={styles.textStyle}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </React.Fragment>
+      ),
+    },
+  ];
 
   function onAuthStateChanged(user) {
     if (user) {
@@ -201,6 +366,39 @@ const CustomerRegister = props => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
   };
+
+  const onNext = () => {
+    if (fields[activeField].isRequired) {
+      if (fields[activeField].value) {
+        if (fields[activeField].errorValue) {
+          Alert.alert(
+            'Error',
+            `${fields[activeField].placeholder} is not valid`,
+          );
+          return;
+        }
+
+        if (fields[activeField].minLength) {
+          if (
+            fields[activeField].value.length < fields[activeField].minLength
+          ) {
+            Alert.alert(
+              'Error',
+              `${fields[activeField].placeholder} is too short`,
+            );
+            return;
+          }
+        }
+
+        setActiveField(activeField + 1);
+      } else {
+        Alert.alert('Error', `${fields[activeField].placeholder} is required`);
+        return;
+      }
+    }
+    setActiveField(activeField + 1);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -223,192 +421,56 @@ const CustomerRegister = props => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              autoCompleteType={'email'}
-              onChangeText={value => validateEmail(value)}
-              value={email}
-              placeholder={'Email'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          {emailError && (
-            <Text style={styles.errorText}>Email is not valid</Text>
+          {fields
+            .filter((_, i) => i === activeField)
+            .map((field, index) => (
+              <React.Fragment key={index}>
+                {field.component ? (
+                  field.component
+                ) : (
+                  <React.Fragment>
+                    <View style={styles.inputItem}>
+                      <TextInput
+                        style={styles.input}
+                        autoCompleteType={field.autoCompleteType}
+                        onChangeText={field.setter}
+                        value={field.value}
+                        placeholder={field.placeholder}
+                        placeholderTextColor="rgba(0,0,0, 1)"
+                        maxLength={field.maxLength}
+                        secureTextEntry={field.isSecure}
+                      />
+                    </View>
+                    {field.errorValue && (
+                      <Text style={styles.errorText}>{field.errorText}</Text>
+                    )}
+                  </React.Fragment>
+                )}
+              </React.Fragment>
+            ))}
+
+          {activeField !== fields.length - 1 && (
+            <View style={styles.buttonWrapper}>
+              <TouchableOpacity
+                style={styles.submit}
+                onPress={() =>
+                  activeField === 0
+                    ? props.navigation.goBack()
+                    : setActiveField(activeField - 1)
+                }>
+                <Text style={styles.textStyle}>Previous</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.submit]} onPress={onNext}>
+                <Text style={styles.textStyle}>Next</Text>
+              </TouchableOpacity>
+            </View>
           )}
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="rgba(0,0,0, 1)"
-              value={password}
-              onChangeText={val => setPassword(val)}
-              maxLength={15}
-              secureTextEntry={true}
-              placeholder={'Password(min 6 characters)'}
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor="rgba(0,0,0, 1)"
-              onChangeText={value => setFullName(value)}
-              value={fullName}
-              placeholder={'Full Name'}
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#BBD5DA',
-                fontSize: 17,
-                borderRadius: 15,
-                width: width - 40,
-              }}
-              onPress={() =>
-                props.navigation.navigate('AddressScreen', {
-                  setAddress: setAddress,
-                })
-              }>
-              <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
-                {address ? address : 'Address'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputItem}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#BBD5DA',
-                fontSize: 17,
-                borderRadius: 15,
-                width: width - 40,
-              }}
-              onPress={() => setDateModalVisible(true)}>
-              <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
-                {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
-              </Text>
-            </TouchableOpacity>
-
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={dateModalVisible}>
-              <View style={styles.modalStyle}>
-                <DatePicker
-                  textColor="#000"
-                  mode="date"
-                  date={date}
-                  onDateChange={onChangeDate}
-                />
-                <TouchableOpacity
-                  style={styles.submit}
-                  onPress={() => {
-                    setDateModalVisible(false);
-                  }}>
-                  <Text style={styles.textStyle}>Submit</Text>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-          </View>
-
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setBio(value)}
-              value={bio}
-              placeholder={'Bio'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setQualification(value)}
-              value={qualification}
-              placeholder={'Qualification'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setSpecialities(value)}
-              value={specialities}
-              placeholder={'Specialities'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setTelegram(value)}
-              value={telegram}
-              placeholder={'Telegram'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setWhatsApp(value)}
-              value={whatsApp}
-              placeholder={'WhatsApp'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
-          <View style={styles.inputItem}>
-            <TextInput
-              style={styles.input}
-              maxLength={150}
-              onChangeText={value => setFacebook(value)}
-              value={facebook}
-              placeholder={'Facebook'}
-              placeholderTextColor="rgba(0,0,0, 1)"
-            />
-          </View>
         </View>
 
         <TermsModal
           visible={isTermsModalVisible}
           onClose={() => setIsTermsModalVisible(false)}
         />
-
-        <View
-          style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
-          <CheckBox
-            value={isTermsSelected}
-            onValueChange={setIsTermsSelected}
-            boxType="square"
-            style={{marginRight: Platform.OS === 'ios' ? 10 : 0}}
-          />
-          <TouchableOpacity
-            style={{height: '100%', marginTop: 10}}
-            onPress={() => setIsTermsModalVisible(true)}>
-            <Text style={{fontSize: 18, textDecorationLine: 'underline'}}>
-              I agree to terms and conditions
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonWrapper}>
-          <TouchableOpacity
-            style={styles.submit}
-            onPress={() => props.navigation.goBack()}>
-            <Text style={styles.textStyle}>Previous</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.submit,
-              {backgroundColor: isTermsSelected ? '#21191A' : 'gray'},
-            ]}
-            onPress={() => (isTermsSelected ? onSubmit() : {})}>
-            <Text style={styles.textStyle}>Next</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     </View>
   );

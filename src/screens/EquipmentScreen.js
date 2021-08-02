@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Modal,
+  Linking,
   Platform,
 } from 'react-native';
 import EquipmentModal from '../components/EquipmentModal';
@@ -536,9 +537,9 @@ const EquipmentScreen = () => {
             alignItems: 'center',
           }}>
           <View style={styles.acceptModal}>
-            <Text style={styles.acceptModalText}>
+            {/* <Text style={styles.acceptModalText}>
               Are you sure you want to buy this equipment?
-            </Text>
+            </Text> */}
             {equipment && (
               <>
                 {equipment.length > 0 &&
@@ -551,6 +552,7 @@ const EquipmentScreen = () => {
                       onValueChange={v => setSelectedWeight(v)}
                       style={styles.picker}
                       itemStyle={styles.pickerItem}
+                      mode="dropdown"
                       selectedValue={
                         selectedWeight ? selectedWeight : 'No weight selected'
                       }>
@@ -575,6 +577,7 @@ const EquipmentScreen = () => {
                     <Picker
                       onValueChange={v => setSelectedMonth(v)}
                       style={styles.picker}
+                      mode="dropdown"
                       itemStyle={styles.pickerItem}
                       selectedValue={selectedMonth}>
                       {months.map((m, i) => (
@@ -622,6 +625,20 @@ const EquipmentScreen = () => {
                           setIsAcceptModalVisible(false);
                         }}>
                         <Text style={styles.orderText}>Cancel</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{width: '100%', alignItems: 'center'}}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          Linking.openURL('mailto:Bringthegym@gmail.com')
+                        }
+                        style={[
+                          styles.orderButton,
+                          {width: 170, marginTop: 20, justifyContent: 'center'},
+                        ]}>
+                        <Text style={styles.orderText}>
+                          Ask for consultation
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   </>
