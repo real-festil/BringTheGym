@@ -1,6 +1,6 @@
 // components/dashboard.js
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import {
   Image,
   TouchableOpacity,
   Linking,
+  Animated,
 } from 'react-native';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
@@ -45,6 +46,8 @@ const CustomerRegister = props => {
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [isTermsSelected, setIsTermsSelected] = useState(false);
   const [activeField, setActiveField] = useState(0);
+  const [isButtonVisible, setIsButtonVisible] = useState(true);
+  const [isHeightChanged, setIsHeightChanged] = useState(false);
 
   const fields = [
     {
@@ -154,7 +157,7 @@ const CustomerRegister = props => {
     },
     {
       component: (
-        <React.Fragment>
+        <View style={{width: width - 40}}>
           <View style={styles.inputItem}>
             <TextInput
               style={styles.input}
@@ -203,9 +206,7 @@ const CustomerRegister = props => {
           </View>
 
           <View style={styles.buttonWrapper}>
-            <TouchableOpacity
-              style={styles.submit}
-              onPress={() => setActiveField(activeField - 1)}>
+            <TouchableOpacity style={styles.submit} onPress={() => onPrev()}>
               <Text style={styles.textStyle}>Previous</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -217,7 +218,7 @@ const CustomerRegister = props => {
               <Text style={styles.textStyle}>Next</Text>
             </TouchableOpacity>
           </View>
-        </React.Fragment>
+        </View>
       ),
     },
   ];
@@ -367,6 +368,61 @@ const CustomerRegister = props => {
     setDate(currentDate);
   };
 
+  const onPrev = () => {
+    if (activeField === 0) {
+      props.navigation.goBack();
+      return;
+    }
+
+    if (activeField === fields.length - 1) {
+      Animated.timing(buttonsYAnim, {
+        toValue: -325,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(buttonsAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => {
+        setIsButtonVisible(true);
+        Animated.timing(buttonsYAnim, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }).start();
+      });
+    }
+
+    Animated.timing(translateXCurrentAnim, {
+      toValue: 500,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(translateXPrevAnim, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(translateXCurrentAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXPrevAnim, {
+        toValue: -500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXNextAnim, {
+        toValue: 500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      setActiveField(activeField - 1);
+    });
+  };
+
   const onNext = () => {
     if (fields[activeField].isRequired) {
       if (fields[activeField].value) {
@@ -389,15 +445,112 @@ const CustomerRegister = props => {
             return;
           }
         }
-
-        setActiveField(activeField + 1);
+        if (activeField === fields.length - 2) {
+          setIsButtonVisible(false);
+          Animated.timing(buttonsAnim, {
+            toValue: -500,
+            duration: 400,
+            useNativeDriver: true,
+          }).start();
+          Animated.timing(buttonsYAnim, {
+            toValue: -450,
+            duration: 0,
+            useNativeDriver: true,
+          });
+        } else {
+          setIsButtonVisible(true);
+        }
+        Animated.timing(translateXPrevAnim, {
+          toValue: -500,
+          duration: 0,
+          useNativeDriver: true,
+        }).start();
+        Animated.timing(translateXCurrentAnim, {
+          toValue: -500,
+          duration: 400,
+          useNativeDriver: true,
+        }).start();
+        Animated.timing(translateXNextAnim, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }).start(() => {
+          Animated.timing(translateXNextAnim, {
+            toValue: 500,
+            duration: 0,
+            useNativeDriver: true,
+          }).start();
+          Animated.timing(translateXCurrentAnim, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true,
+          }).start();
+          setActiveField(activeField + 1);
+        });
+        return;
       } else {
         Alert.alert('Error', `${fields[activeField].placeholder} is required`);
         return;
       }
     }
-    setActiveField(activeField + 1);
+    if (activeField === fields.length - 2) {
+      setIsButtonVisible(false);
+      Animated.timing(buttonsYAnim, {
+        toValue: -325,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(buttonsAnim, {
+        toValue: -500,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setIsButtonVisible(true);
+    }
+    Animated.timing(translateXPrevAnim, {
+      toValue: -500,
+      duration: 0,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(translateXCurrentAnim, {
+      toValue: -500,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(translateXNextAnim, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      console.log('Animation ended');
+      Animated.timing(translateXNextAnim, {
+        toValue: 500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXCurrentAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      setActiveField(activeField + 1);
+    });
+    return;
   };
+
+  const translateXPrevAnim = useRef(new Animated.Value(-500)).current;
+  const translateXNextAnim = useRef(new Animated.Value(500)).current;
+  const translateXCurrentAnim = useRef(new Animated.Value(0)).current;
+  const buttonsAnim = useRef(new Animated.Value(0)).current;
+  const buttonsYAnim = useRef(new Animated.Value(0)).current;
+
+  console.log(isButtonVisible);
+
+  console.log('prev', translateXPrevAnim);
+  console.log('next', translateXNextAnim);
+  console.log('curr', translateXCurrentAnim);
+  console.log('buttonsY', buttonsYAnim);
 
   return (
     <View style={styles.container}>
@@ -421,50 +574,154 @@ const CustomerRegister = props => {
             </TouchableOpacity>
           </View>
 
-          {fields
-            .filter((_, i) => i === activeField)
-            .map((field, index) => (
-              <React.Fragment key={index}>
-                {field.component ? (
-                  field.component
-                ) : (
-                  <React.Fragment>
-                    <View style={styles.inputItem}>
-                      <TextInput
-                        style={styles.input}
-                        autoCompleteType={field.autoCompleteType}
-                        onChangeText={field.setter}
-                        value={field.value}
-                        placeholder={field.placeholder}
-                        placeholderTextColor="rgba(0,0,0, 1)"
-                        maxLength={field.maxLength}
-                        secureTextEntry={field.isSecure}
-                      />
-                    </View>
-                    {field.errorValue && (
-                      <Text style={styles.errorText}>{field.errorText}</Text>
+          <View
+            style={{
+              position: 'relative',
+              height: isButtonVisible ? 75 : 400,
+              width: 'auto',
+            }}>
+            {activeField > 0 &&
+              fields
+                .filter((_, i) => i === activeField - 1)
+                .map((field, index) => (
+                  <Animated.View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      transform: [
+                        {
+                          translateX: translateXPrevAnim,
+                        },
+                      ],
+                    }}
+                    key={index}>
+                    {field.component ? (
+                      field.component
+                    ) : (
+                      <React.Fragment>
+                        <View style={styles.inputItem}>
+                          <TextInput
+                            style={styles.input}
+                            autoCompleteType={field.autoCompleteType}
+                            onChangeText={field.setter}
+                            value={field.value}
+                            placeholder={field.placeholder}
+                            placeholderTextColor="rgba(0,0,0, 1)"
+                            maxLength={field.maxLength}
+                            secureTextEntry={field.isSecure}
+                          />
+                        </View>
+                        {field.errorValue && (
+                          <Text style={styles.errorText}>
+                            {field.errorText}
+                          </Text>
+                        )}
+                      </React.Fragment>
                     )}
-                  </React.Fragment>
-                )}
-              </React.Fragment>
-            ))}
+                  </Animated.View>
+                ))}
 
-          {activeField !== fields.length - 1 && (
-            <View style={styles.buttonWrapper}>
-              <TouchableOpacity
-                style={styles.submit}
-                onPress={() =>
-                  activeField === 0
-                    ? props.navigation.goBack()
-                    : setActiveField(activeField - 1)
-                }>
-                <Text style={styles.textStyle}>Previous</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.submit]} onPress={onNext}>
-                <Text style={styles.textStyle}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            {fields
+              .filter((_, i) => i === activeField)
+              .map((field, index) => (
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    transform: [
+                      {
+                        translateX: translateXCurrentAnim,
+                      },
+                    ],
+                  }}
+                  key={index}>
+                  {field.component ? (
+                    field.component
+                  ) : (
+                    <React.Fragment>
+                      <View style={styles.inputItem}>
+                        <TextInput
+                          style={styles.input}
+                          autoCompleteType={field.autoCompleteType}
+                          onChangeText={field.setter}
+                          value={field.value}
+                          placeholder={field.placeholder}
+                          placeholderTextColor="rgba(0,0,0, 1)"
+                          maxLength={field.maxLength}
+                          secureTextEntry={field.isSecure}
+                        />
+                      </View>
+                      {field.errorValue && (
+                        <Text style={styles.errorText}>{field.errorText}</Text>
+                      )}
+                    </React.Fragment>
+                  )}
+                </Animated.View>
+              ))}
+
+            {activeField !== fields.length &&
+              fields
+                .filter((_, i) => i === activeField + 1)
+                .map((field, index) => (
+                  <Animated.View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      transform: [
+                        {
+                          translateX: translateXNextAnim,
+                        },
+                      ],
+                    }}
+                    key={index}>
+                    {console.log('next component is here')}
+                    {field.component ? (
+                      field.component
+                    ) : (
+                      <React.Fragment>
+                        <View style={styles.inputItem}>
+                          <TextInput
+                            style={styles.input}
+                            autoCompleteType={field.autoCompleteType}
+                            onChangeText={field.setter}
+                            value={field.value}
+                            placeholder={field.placeholder}
+                            placeholderTextColor="rgba(0,0,0, 1)"
+                            maxLength={field.maxLength}
+                            secureTextEntry={field.isSecure}
+                          />
+                        </View>
+                        {field.errorValue && (
+                          <Text style={styles.errorText}>
+                            {field.errorText}
+                          </Text>
+                        )}
+                      </React.Fragment>
+                    )}
+                  </Animated.View>
+                ))}
+          </View>
+
+          <Animated.View
+            style={[
+              styles.buttonWrapper,
+              {
+                position: 'relative',
+                zIndex: -1,
+                marginTop: isButtonVisible ? 0 : 0,
+                transform: [
+                  {translateX: buttonsAnim},
+                  {translateY: buttonsYAnim},
+                ],
+              },
+            ]}>
+            <TouchableOpacity style={styles.submit} onPress={onPrev}>
+              <Text style={styles.textStyle}>Previous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.submit]} onPress={onNext}>
+              <Text style={styles.textStyle}>Next</Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
 
         <TermsModal

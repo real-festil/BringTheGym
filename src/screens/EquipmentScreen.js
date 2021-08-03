@@ -15,6 +15,7 @@ import EquipmentModal from '../components/EquipmentModal';
 import auth from '@react-native-firebase/auth';
 import {Picker} from '@react-native-picker/picker';
 import moment from 'moment';
+import {WheelPicker} from 'react-native-wheel-picker-android';
 
 const EquipmentScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -28,10 +29,23 @@ const EquipmentScreen = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [isBuying, setIsBuying] = useState(false);
   const [selectedWeight, setSelectedWeight] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState(0);
   const currentUserId = auth().currentUser.uid;
 
-  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const months = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+  ];
 
   useEffect(() => {
     database()
@@ -546,55 +560,126 @@ const EquipmentScreen = () => {
                 selectedId &&
                 equipment.find(equip => equip.id === selectedId).weights ? (
                   <>
-                    {console.log('selectedW', selectedWeight, selectedMonth)}
                     <Text style={styles.pickerText}>Select weight</Text>
-                    <Picker
-                      onValueChange={v => setSelectedWeight(v)}
-                      style={styles.picker}
-                      itemStyle={styles.pickerItem}
-                      mode="dropdown"
-                      selectedValue={
-                        selectedWeight ? selectedWeight : 'No weight selected'
-                      }>
-                      <Picker.Item label="No weight selected" value="" />
-                      {Object.keys(
-                        equipment.find(equip => equip.id === selectedId)
-                          .weights,
-                      )
-                        .map(key => [
-                          key,
+                    {Platform.OS === 'android' ? (
+                      <WheelPicker
+                        style={{
+                          width: '100%',
+                          height: 130,
+                          color: '#9ABDC2',
+                          marginVertical: 10,
+                        }}
+                        selectedItemTextColor="#9ABDC2"
+                        itemTextColor="#9ABDC2"
+                        selectedItem={selectedWeight}
+                        onItemSelected={v => setSelectedWeight(v)}
+                        data={Object.keys(
                           equipment.find(equip => equip.id === selectedId)
-                            .weights[key],
-                        ])
-                        .map(weight => (
-                          <Picker.Item
-                            label={weight[0] + ' | $' + weight[1]}
-                            value={weight[0]}
-                          />
-                        ))}
-                    </Picker>
+                            .weights,
+                        )
+                          .map(key => [
+                            key,
+                            equipment.find(equip => equip.id === selectedId)
+                              .weights[key],
+                          ])
+                          .map(weight => weight[0] + ' | $' + weight[1])}
+                      />
+                    ) : (
+                      <Picker
+                        onValueChange={v => setSelectedWeight(v)}
+                        style={styles.picker}
+                        itemStyle={styles.pickerItem}
+                        // mode="dropdown"
+                        selectedValue={
+                          selectedWeight ? selectedWeight : 'No weight selected'
+                        }>
+                        <Picker.Item label="No weight selected" value="" />
+                        {Object.keys(
+                          equipment.find(equip => equip.id === selectedId)
+                            .weights,
+                        )
+                          .map(key => [
+                            key,
+                            equipment.find(equip => equip.id === selectedId)
+                              .weights[key],
+                          ])
+                          .map(weight => (
+                            <Picker.Item
+                              label={weight[0] + ' | $' + weight[1]}
+                              value={weight[0]}
+                            />
+                          ))}
+                      </Picker>
+                    )}
+
                     <Text style={styles.pickerText}>Select months</Text>
-                    <Picker
-                      onValueChange={v => setSelectedMonth(v)}
-                      style={styles.picker}
-                      mode="dropdown"
-                      itemStyle={styles.pickerItem}
-                      selectedValue={selectedMonth}>
-                      {months.map((m, i) => (
-                        <Picker.Item
-                          label={m.toString()}
-                          value={m.toString()}
+                    {Platform.OS === 'android' ? (
+                      <React.Fragment>
+                        <WheelPicker
+                          style={{
+                            width: '100%',
+                            height: 130,
+                            color: '#9ABDC2',
+                            marginVertical: 10,
+                          }}
+                          selectedItemTextColor="#9ABDC2"
+                          itemTextColor="#9ABDC2"
+                          selectedItem={selectedMonth}
+                          onItemSelected={v => setSelectedMonth(v)}
+                          data={months}
                         />
-                      ))}
-                    </Picker>
-                    {selectedMonth && selectedWeight && (
-                      <Text style={[styles.pickerText]}>
-                        Total price: $
-                        {(
-                          equipment.find(equip => equip.id === selectedId)
-                            .weights[selectedWeight] * selectedMonth
-                        ).toFixed(2)}
-                      </Text>
+                        {selectedWeight !== null &&
+                          Object.keys(
+                            equipment.find(equip => equip.id === selectedId)
+                              .weights,
+                          ).map(key => [
+                            key,
+                            equipment.find(equip => equip.id === selectedId)
+                              .weights[key],
+                          ])[selectedWeight][1] && (
+                            <Text style={[styles.pickerText]}>
+                              Total price: $
+                              {(
+                                Object.keys(
+                                  equipment.find(
+                                    equip => equip.id === selectedId,
+                                  ).weights,
+                                ).map(key => [
+                                  key,
+                                  equipment.find(
+                                    equip => equip.id === selectedId,
+                                  ).weights[key],
+                                ])[selectedWeight][1] *
+                                (selectedMonth + 1)
+                              ).toFixed(2)}
+                            </Text>
+                          )}
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <Picker
+                          onValueChange={v => setSelectedMonth(v)}
+                          style={styles.picker}
+                          itemStyle={styles.pickerItem}
+                          selectedValue={selectedMonth}>
+                          {months.map((m, i) => (
+                            <Picker.Item
+                              label={m.toString()}
+                              value={m.toString()}
+                            />
+                          ))}
+                        </Picker>
+                        {selectedMonth &&
+                          equipment.find(equip => equip.id === selectedId) && (
+                            <Text style={[styles.pickerText]}>
+                              Total price: $
+                              {(
+                                equipment.find(equip => equip.id === selectedId)
+                                  .price * selectedMonth
+                              ).toFixed(2)}
+                            </Text>
+                          )}
+                      </React.Fragment>
                     )}
                     <View
                       style={{
@@ -610,11 +695,11 @@ const EquipmentScreen = () => {
                             setSelectedWeight(null);
                             setSelectedMonth(1);
                           }}>
-                          <Text style={styles.orderText}>Buy</Text>
+                          <Text style={styles.orderText}>Place Order</Text>
                         </TouchableOpacity>
                       ) : (
                         <TouchableOpacity style={[styles.orderButton]}>
-                          <Text style={styles.orderText}>Buy</Text>
+                          <Text style={styles.orderText}>Place Order</Text>
                         </TouchableOpacity>
                       )}
                       <TouchableOpacity
@@ -645,28 +730,59 @@ const EquipmentScreen = () => {
                 ) : (
                   <>
                     <Text style={styles.pickerText}>Select months</Text>
-                    <Picker
-                      onValueChange={v => setSelectedMonth(v)}
-                      style={styles.picker}
-                      itemStyle={styles.pickerItem}
-                      selectedValue={selectedMonth}>
-                      {months.map((m, i) => (
-                        <Picker.Item
-                          label={m.toString()}
-                          value={m.toString()}
+                    {Platform.OS === 'android' ? (
+                      <React.Fragment>
+                        <WheelPicker
+                          style={{
+                            width: '100%',
+                            height: 130,
+                            color: '#9ABDC2',
+                            marginVertical: 10,
+                          }}
+                          selectedItemTextColor="#9ABDC2"
+                          itemTextColor="#9ABDC2"
+                          selectedItem={selectedMonth}
+                          onItemSelected={v => setSelectedMonth(v)}
+                          data={months}
                         />
-                      ))}
-                    </Picker>
-                    {selectedMonth &&
-                      equipment.find(equip => equip.id === selectedId) && (
-                        <Text style={[styles.pickerText]}>
-                          Total price: $
-                          {(
-                            equipment.find(equip => equip.id === selectedId)
-                              .price * selectedMonth
-                          ).toFixed(2)}
-                        </Text>
-                      )}
+                        {equipment.find(equip => equip.id === selectedId) && (
+                          <Text style={[styles.pickerText]}>
+                            Total price: $
+                            {(
+                              equipment.find(equip => equip.id === selectedId)
+                                .price *
+                              (selectedMonth + 1)
+                            ).toFixed(2)}
+                          </Text>
+                        )}
+                      </React.Fragment>
+                    ) : (
+                      <React.Fragment>
+                        <Picker
+                          onValueChange={v => setSelectedMonth(v)}
+                          style={styles.picker}
+                          itemStyle={styles.pickerItem}
+                          selectedValue={selectedMonth}>
+                          {months.map((m, i) => (
+                            <Picker.Item
+                              label={m.toString()}
+                              value={m.toString()}
+                            />
+                          ))}
+                        </Picker>
+                        {selectedMonth &&
+                          equipment.find(equip => equip.id === selectedId) && (
+                            <Text style={[styles.pickerText]}>
+                              Total price: $
+                              {(
+                                equipment.find(equip => equip.id === selectedId)
+                                  .price * selectedMonth
+                              ).toFixed(2)}
+                            </Text>
+                          )}
+                      </React.Fragment>
+                    )}
+
                     <View
                       style={{
                         flexDirection: 'row',
@@ -681,11 +797,11 @@ const EquipmentScreen = () => {
                             setSelectedWeight(null);
                             setSelectedMonth(1);
                           }}>
-                          <Text style={styles.orderText}>Buy</Text>
+                          <Text style={styles.orderText}>Place Order</Text>
                         </TouchableOpacity>
                       ) : (
                         <TouchableOpacity style={[styles.orderButton]}>
-                          <Text style={styles.orderText}>Buy</Text>
+                          <Text style={styles.orderText}>Place Order</Text>
                         </TouchableOpacity>
                       )}
                       <TouchableOpacity
@@ -824,7 +940,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#9ABDC2',
     borderRadius: 15,
-    paddingHorizontal: 15,
+    paddingHorizontal: 7,
     paddingVertical: 3,
     width: 90,
   },

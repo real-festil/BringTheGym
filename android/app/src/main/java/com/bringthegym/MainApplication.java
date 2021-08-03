@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.wheelpicker.WheelPickerPackage;
+import com.zyu.ReactNativeWheelPickerPackage;
 import com.reactnativecommunity.geolocation.GeolocationPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
