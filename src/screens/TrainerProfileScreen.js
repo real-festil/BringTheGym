@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import EditInfoModal from '../components/EditInfoModal';
 import TermsModal from '../components/TermsModal';
+import moment from 'moment';
 
 const TrainerProfileScreen = props => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -59,6 +60,14 @@ const TrainerProfileScreen = props => {
               <Text style={styles.subtitle}>Email</Text>
               <Text style={styles.info}>{currentUser.email}</Text>
             </View>
+            {currentUser.birthday && (
+              <View style={styles.infoBlock}>
+                <Text style={styles.subtitle}>Birthday</Text>
+                <Text style={styles.info}>
+                  {moment(currentUser.birthday).format('DD.MM.YYYY')}
+                </Text>
+              </View>
+            )}
             <View style={styles.infoBlock}>
               <Text style={styles.subtitle}>Specialities</Text>
               <Text style={styles.info}>{currentUser.specialities}</Text>

@@ -1,6 +1,6 @@
 // components/dashboard.js
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
+  Animated,
   Alert,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
@@ -61,6 +62,391 @@ const CustomerRegister = props => {
   const [goals, setGoals] = useState(null);
   const [isTermsModalVisible, setIsTermsModalVisible] = useState(false);
   const [isTermsSelected, setIsTermsSelected] = useState(false);
+  const [activeField, setActiveField] = useState(0);
+  const [isButtonVisible, setIsButtonVisible] = useState(true);
+
+  const renderWeight = Array.from({length: 300}, (x, i) => i.toString());
+
+  const fields = [
+    {
+      value: email,
+      setter: v => validateEmail(v),
+      placeholder: 'Email',
+      autoCompleteType: 'email',
+      errorText: 'Email is not valid',
+      errorValue: emailError,
+      isRequired: true,
+    },
+    {
+      value: password,
+      setter: setPassword,
+      placeholder: 'Password (min 6 characters)',
+      isSecure: true,
+      isRequired: true,
+      maxLength: 15,
+      minLength: 6,
+    },
+    {
+      value: fullName,
+      setter: setFullName,
+      placeholder: 'Full Name',
+      isRequired: true,
+    },
+    {
+      type: 'address',
+      component: (
+        <View style={styles.inputItem}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#BBD5DA',
+              fontSize: 17,
+              borderRadius: 15,
+              width: width - 40,
+            }}
+            onPress={() =>
+              props.navigation.navigate('AddressScreen', {
+                setAddress: setAddress,
+              })
+            }>
+            <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+              {address ? address : 'Address'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+    {
+      type: 'date',
+      component: (
+        <View style={styles.inputItem}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#BBD5DA',
+              fontSize: 17,
+              borderRadius: 15,
+              width: width - 40,
+            }}
+            onPress={() => setDateModalVisible(true)}>
+            <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+              {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+    {
+      component: (
+        <>
+          {Platform.OS == 'android' ? (
+            <View style={styles.inputItem}>
+              <View
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  borderRadius: 15,
+                  width: width - 40,
+                }}>
+                <Picker
+                  style={{
+                    color: '#000',
+                    fontSize: 17,
+                    padding: 14,
+                    width: width - 50,
+                  }}
+                  open={true}
+                  selectedValue={weight}
+                  onValueChange={value => onWeightChange(value)}>
+                  {renderWeight &&
+                    renderWeight.map((item, index) => {
+                      return (
+                        <Picker.Item
+                          label={item == 0 ? 'Weight (kg)' : item + ' kg'}
+                          value={index}
+                          key={index}
+                        />
+                      );
+                    })}
+                </Picker>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.inputItem}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  fontSize: 17,
+                  borderRadius: 15,
+                  width: width - 40,
+                }}
+                onPress={() => setWeightModalVisible(true)}>
+                <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+                  {weight ? weight + ' kg' : 'Weight (kg)'}
+                </Text>
+              </TouchableOpacity>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={weightModalVisible}
+                onRequestClose={() => {
+                  setWeightModalVisible(!weightModalVisible);
+                }}>
+                <View style={styles.modalStyle}>
+                  <Picker
+                    style={{color: '#000', padding: 13, width: width}}
+                    mode="dropdown"
+                    selectedValue={weight}
+                    onValueChange={value => onWeightChange(value)}>
+                    {renderWeight &&
+                      renderWeight.map((item, index) => {
+                        return (
+                          <Picker.Item label={item} value={index} key={index} />
+                        );
+                      })}
+                  </Picker>
+                  <TouchableOpacity
+                    style={styles.submit}
+                    onPress={() => setWeightModalVisible(false)}>
+                    <Text style={styles.textStyle}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            </View>
+          )}
+        </>
+      ),
+    },
+    {
+      component: (
+        <>
+          {Platform.OS == 'android' ? (
+            <View style={styles.inputItem}>
+              <View
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  borderRadius: 15,
+                  width: width - 40,
+                }}>
+                <Picker
+                  style={{
+                    color: '#000',
+                    fontSize: 17,
+                    padding: 14,
+                    width: width - 50,
+                  }}
+                  open={true}
+                  selectedValue={height}
+                  onValueChange={value => onHeightChange(value)}>
+                  {renderWeight.map((item, index) => {
+                    return (
+                      <Picker.Item
+                        label={item == 0 ? 'Height (cm)' : item + ' cm'}
+                        value={index}
+                        key={index}
+                      />
+                    );
+                  })}
+                </Picker>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.inputItem}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  fontSize: 17,
+                  borderRadius: 15,
+                  width: width - 40,
+                }}
+                onPress={() => setHeightModalVisible(true)}>
+                <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+                  {height ? height + ' cm' : 'Height (cm)'}
+                </Text>
+              </TouchableOpacity>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={heightModalVisible}
+                onRequestClose={() => {
+                  setHeightModalVisible(!heightModalVisible);
+                }}>
+                <View style={styles.modalStyle}>
+                  <Picker
+                    style={{color: '#000', padding: 13, width: width}}
+                    mode="dropdown"
+                    selectedValue={height}
+                    onValueChange={value => onHeightChange(value)}>
+                    {renderWeight.map((item, index) => {
+                      return (
+                        <Picker.Item label={item} value={index} key={index} />
+                      );
+                    })}
+                  </Picker>
+                  <TouchableOpacity
+                    style={styles.submit}
+                    onPress={() => setHeightModalVisible(false)}>
+                    <Text style={styles.textStyle}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            </View>
+          )}
+        </>
+      ),
+    },
+    {
+      component: (
+        <>
+          {Platform.OS == 'android' ? (
+            <View style={styles.inputItem}>
+              <View
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  borderRadius: 15,
+                  width: width - 40,
+                  zIndex: 0,
+                }}>
+                <Picker
+                  style={{
+                    color: '#000',
+                    width: width - 50,
+                    fontSize: 17,
+                    padding: 14,
+                  }}
+                  selectedValue={train}
+                  onValueChange={value => onTrainChange(value)}>
+                  <Picker.Item
+                    label={'How much do you train?'}
+                    value={''}
+                    key={0}
+                  />
+                  <Picker.Item
+                    label={'Not at all'}
+                    value={'Not at all'}
+                    key={0}
+                  />
+                  <Picker.Item label={'A little'} value={'A little'} key={1} />
+                  <Picker.Item
+                    label={'Sometimes'}
+                    value={'Sometimes'}
+                    key={2}
+                  />
+                </Picker>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.inputItem}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#BBD5DA',
+                  fontSize: 17,
+                  borderRadius: 15,
+                  width: width - 40,
+                }}
+                onPress={() => setTrainModalVisible(true)}>
+                <Text style={{borderRadius: 15, fontSize: 17, padding: 13}}>
+                  {train ? train : 'How much do you train?'}
+                </Text>
+              </TouchableOpacity>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={trainModalVisible}
+                onRequestClose={() => {
+                  setTrainModalVisible(!trainModalVisible);
+                }}>
+                <View style={styles.modalStyle}>
+                  <Picker
+                    style={{color: '#000', width: width}}
+                    selectedValue={train}
+                    onValueChange={value => onTrainChange(value)}>
+                    <Picker.Item
+                      label={'Not at all'}
+                      value={'Not at all'}
+                      key={0}
+                    />
+                    <Picker.Item
+                      label={'A little'}
+                      value={'A little'}
+                      key={1}
+                    />
+                    <Picker.Item
+                      label={'Sometimes'}
+                      value={'Sometimes'}
+                      key={2}
+                    />
+                  </Picker>
+                  <TouchableOpacity
+                    style={styles.submit}
+                    onPress={() => setTrainModalVisible(false)}>
+                    <Text style={styles.textStyle}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
+              </Modal>
+            </View>
+          )}
+        </>
+      ),
+    },
+    {
+      component: (
+        <View style={styles.inputItem}>
+          <TextInput
+            style={styles.input}
+            maxLength={150}
+            onChangeText={value => setBio(value)}
+            value={bio}
+            placeholder={'Bio'}
+            placeholderTextColor="rgba(0,0,0, 1)"
+          />
+        </View>
+      ),
+    },
+    {
+      component: (
+        <View style={{width: width - 40}}>
+          <View style={styles.inputItem}>
+            <TextInput
+              style={styles.input}
+              maxLength={300}
+              multiline={true}
+              onChangeText={value => setGoals(value)}
+              value={goals}
+              placeholder={'Goals'}
+              placeholderTextColor="rgba(0,0,0, 1)"
+            />
+          </View>
+
+          <View
+            style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
+            <CheckBox
+              value={isTermsSelected}
+              onValueChange={setIsTermsSelected}
+            />
+            <TouchableOpacity
+              style={{height: '100%', marginTop: 10}}
+              onPress={() => setIsTermsModalVisible(true)}>
+              <Text style={{fontSize: 18, textDecorationLine: 'underline'}}>
+                I agree to terms and conditions
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity style={styles.submit} onPress={() => onPrev()}>
+              <Text style={styles.textStyle}>Previous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.submit,
+                {backgroundColor: isTermsSelected ? '#21191A' : 'gray'},
+              ]}
+              onPress={() => (isTermsSelected ? onSubmit() : {})}>
+              <Text style={styles.textStyle}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ),
+    },
+  ];
 
   function onAuthStateChanged(user) {
     if (user) {
@@ -150,8 +536,6 @@ const CustomerRegister = props => {
     setDate(currentDate);
   };
 
-  const renderWeight = Array.from({length: 300}, (x, i) => i.toString());
-
   const onWeightChange = weight => {
     setWeight(weight);
   };
@@ -162,6 +546,183 @@ const CustomerRegister = props => {
     setTrain(value);
   };
   console.log(Platform.OS, '');
+
+  const onPrev = () => {
+    if (activeField === 0) {
+      props.navigation.goBack();
+      return;
+    }
+
+    if (activeField === fields.length - 1) {
+      Animated.timing(buttonsYAnim, {
+        toValue: -325,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(buttonsAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => {
+        setIsButtonVisible(true);
+        Animated.timing(buttonsYAnim, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true,
+        }).start();
+      });
+    }
+
+    Animated.timing(translateXPrevAnim, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.timing(translateXCurrentAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXPrevAnim, {
+        toValue: -500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXNextAnim, {
+        toValue: 500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      setActiveField(activeField - 1);
+    });
+    Animated.timing(translateXCurrentAnim, {
+      toValue: 500,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onNext = () => {
+    if (fields[activeField].isRequired) {
+      if (fields[activeField].value) {
+        if (fields[activeField].errorValue) {
+          Alert.alert(
+            'Error',
+            `${fields[activeField].placeholder} is not valid`,
+          );
+          return;
+        }
+
+        if (fields[activeField].minLength) {
+          if (
+            fields[activeField].value.length < fields[activeField].minLength
+          ) {
+            Alert.alert(
+              'Error',
+              `${fields[activeField].placeholder} is too short`,
+            );
+            return;
+          }
+        }
+        if (activeField === fields.length - 2) {
+          setIsButtonVisible(false);
+          Animated.timing(buttonsAnim, {
+            toValue: -500,
+            duration: 400,
+            useNativeDriver: true,
+          }).start();
+          Animated.timing(buttonsYAnim, {
+            toValue: -450,
+            duration: 0,
+            useNativeDriver: true,
+          });
+        } else {
+          setIsButtonVisible(true);
+        }
+        Animated.timing(translateXPrevAnim, {
+          toValue: -500,
+          duration: 0,
+          useNativeDriver: true,
+        }).start();
+        Animated.timing(translateXCurrentAnim, {
+          toValue: -500,
+          duration: 400,
+          useNativeDriver: true,
+        }).start();
+        Animated.timing(translateXNextAnim, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }).start(() => {
+          Animated.timing(translateXNextAnim, {
+            toValue: 500,
+            duration: 0,
+            useNativeDriver: true,
+          }).start();
+          Animated.timing(translateXCurrentAnim, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true,
+          }).start();
+          setActiveField(activeField + 1);
+        });
+        return;
+      } else {
+        Alert.alert('Error', `${fields[activeField].placeholder} is required`);
+        return;
+      }
+    }
+    if (activeField === fields.length - 2) {
+      setIsButtonVisible(false);
+      Animated.timing(buttonsYAnim, {
+        toValue: -325,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(buttonsAnim, {
+        toValue: -500,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setIsButtonVisible(true);
+    }
+    Animated.timing(translateXPrevAnim, {
+      toValue: -500,
+      duration: 0,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(translateXCurrentAnim, {
+      toValue: -500,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(translateXNextAnim, {
+      toValue: 0,
+      duration: 400,
+      useNativeDriver: true,
+    }).start(() => {
+      console.log('Animation ended');
+      Animated.timing(translateXNextAnim, {
+        toValue: 500,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(translateXCurrentAnim, {
+        toValue: 0,
+        duration: 0,
+        useNativeDriver: true,
+      }).start();
+      setActiveField(activeField + 1);
+    });
+    return;
+  };
+
+  const translateXPrevAnim = useRef(new Animated.Value(-500)).current;
+  const translateXNextAnim = useRef(new Animated.Value(500)).current;
+  const translateXCurrentAnim = useRef(new Animated.Value(0)).current;
+  const buttonsAnim = useRef(new Animated.Value(0)).current;
+  const buttonsYAnim = useRef(new Animated.Value(0)).current;
 
   return (
     <View style={styles.container}>
@@ -185,7 +746,7 @@ const CustomerRegister = props => {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.inputItem}>
+          {/* <View style={styles.inputItem}>
             <TextInput
               style={styles.input}
               autoCompleteType={'email'}
@@ -532,11 +1093,6 @@ const CustomerRegister = props => {
           </View>
         </View>
 
-        <TermsModal
-          visible={isTermsModalVisible}
-          onClose={() => setIsTermsModalVisible(false)}
-        />
-
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 20}}>
           <CheckBox
@@ -566,7 +1122,183 @@ const CustomerRegister = props => {
             onPress={() => (isTermsSelected ? onSubmit() : {})}>
             <Text style={styles.textStyle}>Next</Text>
           </TouchableOpacity>
+        </View> */}
+          <View
+            style={{
+              position: 'relative',
+              height: isButtonVisible ? 75 : 400,
+              width: 'auto',
+            }}>
+            {activeField > 0 &&
+              fields
+                .filter((_, i) => i === activeField - 1)
+                .map((field, index) => (
+                  <Animated.View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      transform: [
+                        {
+                          translateX: translateXPrevAnim,
+                        },
+                      ],
+                    }}
+                    key={index}>
+                    {field.component ? (
+                      field.component
+                    ) : (
+                      <React.Fragment>
+                        <View style={styles.inputItem}>
+                          <TextInput
+                            style={styles.input}
+                            autoCompleteType={field.autoCompleteType}
+                            onChangeText={field.setter}
+                            value={field.value}
+                            placeholder={field.placeholder}
+                            placeholderTextColor="rgba(0,0,0, 1)"
+                            maxLength={field.maxLength}
+                            secureTextEntry={field.isSecure}
+                          />
+                        </View>
+                        {field.errorValue && (
+                          <Text style={styles.errorText}>
+                            {field.errorText}
+                          </Text>
+                        )}
+                      </React.Fragment>
+                    )}
+                  </Animated.View>
+                ))}
+
+            {fields
+              .filter((_, i) => i === activeField)
+              .map((field, index) => (
+                <Animated.View
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    transform: [
+                      {
+                        translateX: translateXCurrentAnim,
+                      },
+                    ],
+                  }}
+                  key={index}>
+                  {field.component ? (
+                    field.component
+                  ) : (
+                    <React.Fragment>
+                      <View style={styles.inputItem}>
+                        <TextInput
+                          style={styles.input}
+                          autoCompleteType={field.autoCompleteType}
+                          onChangeText={field.setter}
+                          value={field.value}
+                          placeholder={field.placeholder}
+                          placeholderTextColor="rgba(0,0,0, 1)"
+                          maxLength={field.maxLength}
+                          secureTextEntry={field.isSecure}
+                        />
+                      </View>
+                      {field.errorValue && (
+                        <Text style={styles.errorText}>{field.errorText}</Text>
+                      )}
+                    </React.Fragment>
+                  )}
+                </Animated.View>
+              ))}
+
+            {activeField !== fields.length &&
+              fields
+                .filter((_, i) => i === activeField + 1)
+                .map((field, index) => (
+                  <Animated.View
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      transform: [
+                        {
+                          translateX: translateXNextAnim,
+                        },
+                      ],
+                    }}
+                    key={index}>
+                    {console.log('next component is here')}
+                    {field.component ? (
+                      field.component
+                    ) : (
+                      <React.Fragment>
+                        <View style={styles.inputItem}>
+                          <TextInput
+                            style={styles.input}
+                            autoCompleteType={field.autoCompleteType}
+                            onChangeText={field.setter}
+                            value={field.value}
+                            placeholder={field.placeholder}
+                            placeholderTextColor="rgba(0,0,0, 1)"
+                            maxLength={field.maxLength}
+                            secureTextEntry={field.isSecure}
+                          />
+                        </View>
+                        {field.errorValue && (
+                          <Text style={styles.errorText}>
+                            {field.errorText}
+                          </Text>
+                        )}
+                      </React.Fragment>
+                    )}
+                  </Animated.View>
+                ))}
+          </View>
+
+          <Animated.View
+            style={[
+              styles.buttonWrapper,
+              {
+                position: 'relative',
+                zIndex: -1,
+                marginTop: isButtonVisible ? 0 : 0,
+                transform: [
+                  {translateX: buttonsAnim},
+                  {translateY: buttonsYAnim},
+                ],
+              },
+            ]}>
+            <TouchableOpacity style={styles.submit} onPress={onPrev}>
+              <Text style={styles.textStyle}>Previous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.submit]} onPress={onNext}>
+              <Text style={styles.textStyle}>Next</Text>
+            </TouchableOpacity>
+          </Animated.View>
         </View>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={dateModalVisible}
+          onRequestClose={() => {
+            setDateModalVisible(!dateModalVisible);
+          }}>
+          <View style={styles.modalStyle}>
+            <DatePicker
+              textColor="#000"
+              mode="date"
+              date={date}
+              onDateChange={onChangeDate}
+            />
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={() => setDateModalVisible(!dateModalVisible)}>
+              <Text style={styles.textStyle}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+
+        <TermsModal
+          visible={isTermsModalVisible}
+          onClose={() => setIsTermsModalVisible(false)}
+        />
       </ScrollView>
     </View>
   );

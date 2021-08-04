@@ -1,4 +1,4 @@
 cd android
 ./gradlew bundleRelease -x bundleReleaseJsAndAssets
 cd ..
-npx react-native run-android --variant=release
+call npx react-native run-android --variant=release

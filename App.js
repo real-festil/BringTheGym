@@ -12,7 +12,14 @@ import {
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import database from '@react-native-firebase/database';
-import {View, TouchableOpacity, Image, Text} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  PermissionsAndroid,
+  Platform,
+  Text,
+} from 'react-native';
 
 import Login from './src/Login';
 import Signup from './src/SignUp';
@@ -31,6 +38,7 @@ import EquipmentScreen from './src/screens/EquipmentScreen';
 import {LogBox, Dimensions, Platform} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import {TransitionPresets} from '@react-navigation/stack';
+import {request, PERMISSIONS} from 'react-native-permissions';
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -400,6 +408,24 @@ export default function App() {
   const [role, setRole] = useState(null);
   useEffect(() => {
     RNBootSplash.hide({fade: true});
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Bring The Gym Map Permission',
+          message: 'Bring The Gym need access to your geolocation ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+    } else {
+      request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
+        if (result === 'granted') {
+          console.log(result);
+        }
+      });
+    }
     setActiveUser();
   }, []);
 

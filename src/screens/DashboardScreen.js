@@ -17,7 +17,10 @@ const DashboardScreen = () => {
   const [location, setLocation] = React.useState(null);
 
   React.useEffect(() => {
-    requestLocationPermission();
+    const fetchPermissions = async () => {
+      requestLocationPermission();
+    };
+    fetchPermissions();
     GeolocationCommunity.getCurrentPosition(info => console.log(info));
     Geolocation.getCurrentPosition(
       position => {
@@ -43,6 +46,7 @@ const DashboardScreen = () => {
   }, [isGranted]);
 
   const requestLocationPermission = async () => {
+    console.log('requesting');
     if (Platform.OS !== 'ios') {
       try {
         const granted = await PermissionsAndroid.request(
@@ -55,7 +59,9 @@ const DashboardScreen = () => {
             buttonPositive: 'OK',
           },
         );
+        console.log('granted perm', granted);
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('is granted now');
           setIsGranted(true);
         } else {
           console.log('Location permission denied');
@@ -265,7 +271,7 @@ const DashboardScreen = () => {
     },
   ];
 
-  console.log(location);
+  console.log('location', location);
 
   return (
     <View style={styles.container}>
@@ -280,19 +286,21 @@ const DashboardScreen = () => {
             longitudeDelta: 0.0421,
           }}
           customMapStyle={mapStyle}>
-          <Marker
-            // image={require('../assets/pin.png')}
-            coordinate={{
-              latitude: location ? location.latitude : 137.78825,
-              longitude: location ? location.longitude : -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}>
-            <Image
-              source={require('../assets/pin.png')}
-              style={{width: 33, height: 44}}
-            />
-          </Marker>
+          {location && (
+            <Marker
+              // image={require('../assets/pin.png')}
+              coordinate={{
+                latitude: location ? location.latitude : 137.78825,
+                longitude: location ? location.longitude : -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}>
+              <Image
+                source={require('../assets/pin.png')}
+                style={{width: 33, height: 44}}
+              />
+            </Marker>
+          )}
         </MapView>
       </View>
     </View>

@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import firebase from '../../database/fireBase';
 import storage from '@react-native-firebase/storage';
+import moment from 'moment';
 
 const LoginFunctions = {
   signInOrLink: async function (provider, credential, email) {
@@ -86,7 +87,7 @@ const LoginFunctions = {
             .set({
               email: email,
               fullName: fullName,
-              birthday: date,
+              birthday: moment(date).format(),
               weight: weight,
               height: height,
               train: train,
@@ -196,7 +197,7 @@ const LoginFunctions = {
             .set({
               email: email,
               fullName: fullName,
-              birthday: date,
+              birthday: moment(date).format(),
               bio: bio,
               qualification: qualification,
               specialities: specialities,

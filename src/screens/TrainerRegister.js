@@ -113,27 +113,6 @@ const CustomerRegister = props => {
               {date ? moment(date).format('MM DD YYYY') : 'Birthday'}
             </Text>
           </TouchableOpacity>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={dateModalVisible}>
-            <View style={styles.modalStyle}>
-              <DatePicker
-                textColor="#000"
-                mode="date"
-                date={date}
-                onDateChange={onChangeDate}
-              />
-              <TouchableOpacity
-                style={styles.submit}
-                onPress={() => {
-                  setDateModalVisible(false);
-                }}>
-                <Text style={styles.textStyle}>Submit</Text>
-              </TouchableOpacity>
-            </View>
-          </Modal>
         </View>
       ),
     },
@@ -364,6 +343,7 @@ const CustomerRegister = props => {
     registerUser();
   };
   const onChangeDate = selectedDate => {
+    console.log(selectedDate, 'date');
     const currentDate = selectedDate || date;
     setDate(currentDate);
   };
@@ -545,13 +525,6 @@ const CustomerRegister = props => {
   const buttonsAnim = useRef(new Animated.Value(0)).current;
   const buttonsYAnim = useRef(new Animated.Value(0)).current;
 
-  console.log(isButtonVisible);
-
-  console.log('prev', translateXPrevAnim);
-  console.log('next', translateXNextAnim);
-  console.log('curr', translateXCurrentAnim);
-  console.log('buttonsY', buttonsYAnim);
-
   return (
     <View style={styles.container}>
       <ScrollView
@@ -728,6 +701,27 @@ const CustomerRegister = props => {
           visible={isTermsModalVisible}
           onClose={() => setIsTermsModalVisible(false)}
         />
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={dateModalVisible}>
+          <View style={styles.modalStyle}>
+            <DatePicker
+              textColor="#000"
+              mode="date"
+              date={date}
+              onDateChange={onChangeDate}
+            />
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={() => {
+                setDateModalVisible(false);
+              }}>
+              <Text style={styles.textStyle}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </ScrollView>
     </View>
   );
