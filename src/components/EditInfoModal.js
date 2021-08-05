@@ -143,7 +143,15 @@ const EditInfoModal = props => {
           height,
         });
     }
-    if (userPhoto) {
+
+    if (date) {
+      database()
+        .ref('users/' + currentUserId + '/')
+        .update({
+          birthday: moment(date).format(),
+        });
+    }
+    if (userPhoto && userPhoto !== 'none') {
       const reference = storage().ref(`${currentUserId}/profile-image.png`);
       console.log('uploaded', userPhoto);
       const task = reference.putFile(
@@ -183,12 +191,11 @@ const EditInfoModal = props => {
         })
         .catch(error => {});
     }
-
+    props.navigation.navigate('Account');
     setTimeout(() => {
       setIsLoading(false);
     }, 200);
 
-    props.navigation.navigate('Account');
     props.onClose();
   };
 
@@ -256,7 +263,7 @@ const EditInfoModal = props => {
                   <Image
                     style={{width: 100, height: 100, resizeMode: 'contain'}}
                     source={
-                      userPhoto
+                      userPhoto && userPhoto !== 'none'
                         ? typeof userPhoto === 'string'
                           ? {uri: userPhoto.uri}
                           : userPhoto

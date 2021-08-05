@@ -17,7 +17,6 @@ import {
   TouchableOpacity,
   Image,
   PermissionsAndroid,
-  Platform,
   Text,
 } from 'react-native';
 
