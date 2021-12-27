@@ -76,19 +76,19 @@ const TrainerProfileScreen = props => {
               <Text style={styles.subtitle}>Qualification</Text>
               <Text style={styles.info}>{currentUser.qualification}</Text>
             </View>
-            {currentUser.telegram.length > 0 && (
+            {currentUser.telegram && currentUser.telegram.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>Telegram</Text>
                 <Text style={styles.info}>{currentUser.telegram}</Text>
               </View>
             )}
-            {currentUser.whatsApp.length > 0 && (
+            {currentUser.whatsApp && currentUser.whatsApp.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>WhatsApp</Text>
                 <Text style={styles.info}>{currentUser.whatsApp}</Text>
               </View>
             )}
-            {currentUser.facebook.length > 0 && (
+            {currentUser.facebook && currentUser.facebook.length > 0 && (
               <View style={styles.infoBlock}>
                 <Text style={styles.subtitle}>Facebook</Text>
                 <Text style={styles.info}>{currentUser.facebook}</Text>

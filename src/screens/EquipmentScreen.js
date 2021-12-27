@@ -50,8 +50,7 @@ const EquipmentScreen = () => {
   useEffect(() => {
     database()
       .ref('equipments')
-      .once('value')
-      .then(snapshot => {
+      .on('value', snapshot => {
         setEquipment(Object.values(snapshot.val()));
       });
     database()
