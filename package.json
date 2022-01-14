@@ -26,6 +26,7 @@
     "@react-navigation/drawer": "^5.12.5",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.4",
+    "axios": "^0.24.0",
     "firebase": "^8.4.2",
     "moment": "^2.29.1",
     "react": "17.0.1",

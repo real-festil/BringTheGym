@@ -506,15 +506,15 @@ export default function App() {
             }}
             routeNames={['Dashboard', 'Profile']}
             drawerContent={CustomDrawerContent}>
-            <Drawer.Screen
+            {/* <Drawer.Screen
               name="Dashboard"
               options={{
                 drawerLabel: 'Dashboard',
                 ...TransitionPresets.ScaleFromCenterAndroid,
               }}
               component={DashboardStack}
-            />
-            {role === 'customer' ? (
+            /> */}
+            {/* {role === 'customer' ? (
               <Drawer.Screen
                 name="Trainers"
                 options={{drawerLabel: 'Trainers'}}
@@ -526,7 +526,7 @@ export default function App() {
                 options={{drawerLabel: 'Clientele'}}
                 component={ClienteleStack}
               />
-            )}
+            )} */}
             <Drawer.Screen name="Equipment" component={EquipmentStack} />
             {role === 'customer' ? (
               <Drawer.Screen
