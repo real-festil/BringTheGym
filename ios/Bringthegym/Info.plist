@@ -31,7 +31,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>454440195657703</string>
 	<key>FacebookDisplayName</key>
@@ -70,7 +70,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App need permission to Photo Library</string>
+	<string>App need permission to Photo Library before you can choose as avatar</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Antonio-Bold.ttf</string>

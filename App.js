@@ -177,7 +177,7 @@ const NavigationDrawerStructure = props => {
           alignItems: 'center',
           zIndex: 100000,
           position: 'absolute',
-          bottom: -10,
+          bottom: -40,
           left: -10,
         }}>
         <TouchableOpacity
@@ -211,7 +211,7 @@ const NavigationDrawerStructure = props => {
             alignItems: 'center',
             zIndex: 100000,
             position: 'absolute',
-            top: 0,
+            top: -15,
             left: -10,
           }}>
           <View style={{height: 'auto', justifyContent: 'flex-start'}}>
@@ -264,7 +264,7 @@ const screenOptions = navigation => ({
         width: 63,
         height: 40,
         marginRight: 10,
-        marginTop: -60,
+        marginTop: -40,
         position: 'relative',
         zIndex: 0,
       }}
@@ -419,11 +419,11 @@ export default function App() {
         },
       );
     } else {
-      request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
-        if (result === 'granted') {
-          console.log(result);
-        }
-      });
+      //request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
+       // if (result === 'granted') {
+      //    console.log(result);
+       // }
+     // });
     }
     setActiveUser();
   }, []);

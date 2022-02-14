@@ -24,6 +24,9 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {GoogleSignin} from '@react-native-community/google-signin';
 import LoginFunctions from './utils/LoginFunction';
+import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication';
+import jwt_decode from 'jwt-decode';
+
 const {width, height} = Dimensions.get('window');
 
 export default class Login extends Component {
@@ -187,6 +190,31 @@ export default class Login extends Component {
     }
   };
 
+  async onAppleButtonPress() {
+    // Start the sign-in request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+  
+    // Ensure Apple returned a user identityToken
+    if (!appleAuthRequestResponse.identityToken) {
+      throw 'Apple Sign-In failed - no identify token returned';
+    }
+  
+    // Create a Firebase credential from the response
+    const { identityToken, nonce } = appleAuthRequestResponse;
+    const appleCredential = auth.AppleAuthProvider.credential(identityToken, nonce);
+
+    const { email, email_verified, is_private_email, sub } = jwt_decode(appleAuthRequestResponse.identityToken)
+
+    return LoginFunctions.signInOrLink(
+      auth.AppleAuthProvider.PROVIDER_ID,
+      appleCredential,
+      email
+    );
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -248,6 +276,18 @@ export default class Login extends Component {
             onPress={() => this.userLogin()}>
             <Text style={styles.btnText}>Login</Text>
           </TouchableOpacity>
+
+          <AppleButton
+                  buttonStyle={AppleButton.Style.BLACK}
+                  buttonType={AppleButton.Type.SIGN_IN}
+                  style={{
+                    width: '100%',
+                    marginTop: 20,
+                    borderRadius: 20,
+                    height: 50,
+                  }}
+                  onPress={() => this.onAppleButtonPress().then(() => console.log('Apple sign-in complete!'))}
+            />
 
           <TouchableOpacity
             style={styles.loginText}
@@ -316,12 +356,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#21191A',
-    borderRadius: 25,
+    backgroundColor: '#000',
+    borderRadius: 10,
   },
   btnText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 18,
+    fontWeight: 'bold'
   },
   loginText: {
     color: '#000',

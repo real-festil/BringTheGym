@@ -550,9 +550,6 @@ const EquipmentScreen = () => {
             alignItems: 'center',
           }}>
           <View style={styles.acceptModal}>
-            {/* <Text style={styles.acceptModalText}>
-              Are you sure you want to buy this equipment?
-            </Text> */}
             {equipment && (
               <>
                 {equipment.length > 0 &&
@@ -668,7 +665,7 @@ const EquipmentScreen = () => {
                             />
                           ))}
                         </Picker>
-                        {selectedMonth &&
+                        {!!selectedMonth &&
                           equipment.find(equip => equip.id === selectedId) && (
                             <Text style={[styles.pickerText]}>
                               Total price: $
@@ -686,7 +683,7 @@ const EquipmentScreen = () => {
                         justifyContent: 'space-around',
                         marginTop: 10,
                       }}>
-                      {selectedMonth && selectedWeight ? (
+                      {!!selectedMonth && !!selectedWeight ? (
                         <TouchableOpacity
                           style={[styles.orderButton]}
                           onPress={() => {
@@ -769,8 +766,10 @@ const EquipmentScreen = () => {
                             />
                           ))}
                         </Picker>
-                        {selectedMonth &&
+                        {!!selectedMonth &&
                           equipment.find(equip => equip.id === selectedId) && (
+                            <>
+                            
                             <Text style={[styles.pickerText]}>
                               Total price: $
                               {(
@@ -778,6 +777,7 @@ const EquipmentScreen = () => {
                                   .price * selectedMonth
                               ).toFixed(2)}
                             </Text>
+                            </>
                           )}
                       </React.Fragment>
                     )}
